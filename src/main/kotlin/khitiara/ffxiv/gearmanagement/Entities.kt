@@ -1,6 +1,5 @@
 package khitiara.ffxiv.gearmanagement
 
-import java.time.Instant
 import java.util.*
 import javax.persistence.*
 
@@ -15,8 +14,8 @@ class Static(
 
 @Entity
 class XivCharacter(
-    @Id var lodestoneId: Long? = null,
+    @Id var lodestoneId: Long,
     var name: String,
     @ManyToOne var static: Static?,
-    var lastUpdate: Instant
+    var discordUser: Long?
 )

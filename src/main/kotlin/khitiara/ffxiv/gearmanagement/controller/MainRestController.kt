@@ -13,5 +13,5 @@ class MainRestController(private val characterRepository: CharacterRepository,
                          private val staticRepository: StaticRepository,
                          private val xivApi: XIVApi) {
     @GetMapping("/character/{id}")
-    fun characterById(@PathVariable id: Long): XivCharacterResponse = xivApi.loadDataFromLodestone(id)
+    suspend fun characterById(@PathVariable id: Long): XivCharacterResponse = xivApi.loadDataFromLodestone(id)
 }

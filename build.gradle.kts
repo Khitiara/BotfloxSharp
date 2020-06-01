@@ -55,13 +55,3 @@ allOpen {
     annotation("javax.persistence.Embeddable")
     annotation("javax.persistence.MappedSuperclass")
 }
-
-val stage = tasks.create<Copy>("stage") {
-    dependsOn("clean", "build")
-    from(tasks.jar.get().archiveFile)
-    into(project.rootDir)
-    rename { "app.jar" }
-}
-
-stage.mustRunAfter("clean")
-tasks.clean.get().doLast { project.file("app.jar").delete() }

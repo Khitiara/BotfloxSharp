@@ -30,6 +30,8 @@ dependencies {
     implementation("net.dv8tion:JDA:4.1.1_156") {
         exclude(module = "opus-java")
     }
+
+    implementation("club.minnced:jda-reactor:1.1.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
@@ -37,6 +39,10 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+
+    implementation("org.webjars:webjars-locator:0.40")
+    implementation("org.webjars:jquery:3.5.1")
+    implementation("org.webjars:bootstrap:4.5.0")
 }
 
 tasks.withType<Test> {

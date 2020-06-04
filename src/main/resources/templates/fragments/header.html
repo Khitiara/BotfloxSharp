@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link href='/webjars/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
+    <link th:href='@{/webjars/bootstrap/css/bootstrap.min.css}' rel='stylesheet'>
     <meta charset="UTF-8">
     <title>Header</title>
 </head>
@@ -21,7 +21,7 @@
         <th:block th:replace="${extras}"/>
     </ul>
 </nav>
-<script src="/webjars/jquery/jquery.min.js"></script>
-<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </body>
 </html>

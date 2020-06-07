@@ -4,6 +4,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
+@Table(name = "statics")
 class Static(
     @Id @GeneratedValue var id: UUID? = null,
     var name: String,
@@ -13,6 +14,7 @@ class Static(
 )
 
 @Entity
+@Table(name = "characters")
 class XivCharacter(
     @Id var lodestoneId: Long,
     var name: String,

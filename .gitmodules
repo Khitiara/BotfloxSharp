@@ -1,0 +1,3 @@
+[submodule "classjob-icons"]
+	path = classjob-icons
+	url = git@github.com:xivapi/classjob-icons.git

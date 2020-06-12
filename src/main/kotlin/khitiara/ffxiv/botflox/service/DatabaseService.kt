@@ -1,10 +1,10 @@
-package khitiara.ffxiv.gearmanagement.service
+package khitiara.ffxiv.botflox.service
 
-import khitiara.ffxiv.gearmanagement.CharacterRepository
-import khitiara.ffxiv.gearmanagement.Static
-import khitiara.ffxiv.gearmanagement.StaticRepository
-import khitiara.ffxiv.gearmanagement.XivCharacter
-import khitiara.ffxiv.gearmanagement.xivapi.XIVApi
+import khitiara.ffxiv.botflox.CharacterRepository
+import khitiara.ffxiv.botflox.Static
+import khitiara.ffxiv.botflox.StaticRepository
+import khitiara.ffxiv.botflox.XivCharacter
+import khitiara.ffxiv.botflox.xivapi.XIVApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service

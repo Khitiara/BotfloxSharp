@@ -8,6 +8,7 @@ plugins {
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
     kotlin("plugin.allopen") version "1.3.61"
+    id("com.novoda.build-properties") version "0.4.1"
 }
 
 group = "khitiara.ffxiv"
@@ -39,10 +40,17 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    implementation("com.vladmihalcea:hibernate-types-52:2.9.11")
 
     implementation("org.webjars:webjars-locator:0.40")
     implementation("org.webjars:jquery:3.5.1")
     implementation("org.webjars:bootstrap:4.5.0")
+}
+
+buildProperties {
+    create("secrets") {
+        using(project.file("secrets.properties"))
+    }
 }
 
 tasks.withType<Test> {
@@ -65,5 +73,12 @@ allOpen {
 tasks.processResources {
     from("${project.rootDir}/classjob-icons/icons") {
         into("resources/cj-icons")
+    }
+    from(sourceSets["main"].resources.srcDirs) {
+        include("**/*.properties")
+        expand(buildProperties["secrets"].asMap().mapValues { it.value.string })
+    }
+    from(sourceSets["main"].resources.srcDirs) {
+        exclude("**/*.properties")
     }
 }

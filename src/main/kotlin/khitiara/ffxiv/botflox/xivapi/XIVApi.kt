@@ -1,4 +1,4 @@
-package khitiara.ffxiv.gearmanagement.xivapi
+package khitiara.ffxiv.botflox.xivapi
 
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable

@@ -1,4 +1,4 @@
-package khitiara.ffxiv.gearmanagement
+package khitiara.ffxiv.botflox
 
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer

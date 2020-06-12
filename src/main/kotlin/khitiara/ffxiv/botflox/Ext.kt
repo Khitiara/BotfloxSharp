@@ -1,4 +1,4 @@
-package khitiara.ffxiv.gearmanagement
+package khitiara.ffxiv.botflox
 
 import net.dv8tion.jda.api.requests.RestAction
 import kotlin.coroutines.resume

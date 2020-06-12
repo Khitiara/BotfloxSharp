@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href='@{/webjars/bootstrap/css/bootstrap.min.css}' rel='stylesheet'>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <title>Build Your Bis</title>
+</head>
+<body>
+<nav th:replace="fragments/header :: header('build-bis', ~{})"></nav>
+
+<main class="container align-items-center" role="main">
+    <div class="card w-auto">
+        <h5 class="card-header">Set-up Your Bis Listing</h5>
+        <div class="card-body">
+            <form>
+                <div class="form-row align-items-center">
+
+                    <div class="form-group col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="main-hand-type">
+                                    <span class="xiv-slot-main_arm"></span> Main Hand
+                                </label>
+                            </div>
+                            <select class="form-control" id="main-hand-type" name="main-hand-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class=" input-group mb-3">
+                            <select class="form-control" id="off-hand-type" name="off-hand-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                                <option value="EMPTY">No Item (Offhand Only)</option>
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="off-hand-type">
+                                    Off Hand <span class="xiv-slot-off_hand"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row align-items-center">
+
+                    <div class="form-group col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="head-type">
+                                    <span class="xiv-slot-head"></span> Headpiece
+                                </label>
+                            </div>
+                            <select class="form-control" id="head-type" name="head-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class=" input-group mb-3">
+                            <select class="form-control" id="ear-type" name="ear-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="ear-type">
+                                    Earrings <span class="xiv-slot-ear"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row align-items-center">
+
+                    <div class="form-group col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="chest-type">
+                                    <span class="xiv-slot-body"></span> Chestpiece
+                                </label>
+                            </div>
+                            <select class="form-control" id="chest-type" name="chest-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class=" input-group mb-3">
+                            <select class="form-control" id="neck-type" name="neck-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="neck-type">
+                                    Neckpiece <span class="xiv-slot-neck"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row align-items-center">
+
+                    <div class="form-group col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="arms-type">
+                                    <span class="xiv-slot-arms"></span> Arms/Hands
+                                </label>
+                            </div>
+                            <select class="form-control" id="arms-type" name="arms-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class=" input-group mb-3">
+                            <select class="form-control" id="wrist-type" name="wrist-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="wrist-type">
+                                    Wrists <span class="xiv-slot-neck"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row align-items-center">
+
+                    <div class="form-group col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="belt-type">
+                                    <span class="xiv-slot-belt"></span> Belt
+                                </label>
+                            </div>
+                            <select class="form-control" id="belt-type" name="belt-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class=" input-group mb-3">
+                            <select class="form-control" id="ringl-type" name="ringl-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="ringl-type">
+                                    Left Ring <span class="xiv-slot-ring"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row align-items-center">
+
+                    <div class="form-group col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="legs-type">
+                                    <span class="xiv-slot-legs"></span> Pants
+                                </label>
+                            </div>
+                            <select class="form-control" id="legs-type" name="legs-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class=" input-group mb-3">
+                            <select class="form-control" id="ringr-type" name="ringr-type">
+                                <option value="RAID">Raid Drop</option>
+                                <option value="TOME">Augmented Tomestone</option>
+                                <option value="OTHER">Other Gear</option>
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="ringr-type">
+                                    Right Ring <span class="xiv-slot-ring"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row align-items-center">
+
+                    <div class="form-group col-md-6">
+                        <div class="btn-group mb-3">
+                            <button type="button" class="btn btn-outline-secondary" disabled>
+                                <span class="xiv-slot-feet"></span>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" disabled>
+                                Boots
+                            </button>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-primary active">
+                                    <input type="radio" name="feet-type" value="RAID">Raid
+                                </label>
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" name="feet-type" value="TOME">Tome
+                                </label>
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" name="feet-type" value="OTHER">Other
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="btn-group mb-3">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-primary active">
+                                    Soulstone
+                                </label>
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary" disabled>
+                                Soul
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" disabled>
+                                <span class="xiv-slot-soul"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden">
+            </form>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

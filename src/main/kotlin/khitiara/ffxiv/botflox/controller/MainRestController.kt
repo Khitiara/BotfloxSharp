@@ -1,9 +1,9 @@
-package khitiara.ffxiv.gearmanagement.controller
+package khitiara.ffxiv.botflox.controller
 
-import khitiara.ffxiv.gearmanagement.CharacterRepository
-import khitiara.ffxiv.gearmanagement.StaticRepository
-import khitiara.ffxiv.gearmanagement.xivapi.XIVApi
-import khitiara.ffxiv.gearmanagement.xivapi.XivCharacterResponse
+import khitiara.ffxiv.botflox.CharacterRepository
+import khitiara.ffxiv.botflox.StaticRepository
+import khitiara.ffxiv.botflox.xivapi.XIVApi
+import khitiara.ffxiv.botflox.xivapi.XivCharacterResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController

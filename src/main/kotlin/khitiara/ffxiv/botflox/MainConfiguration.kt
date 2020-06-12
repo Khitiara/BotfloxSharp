@@ -1,4 +1,4 @@
-package khitiara.ffxiv.gearmanagement
+package khitiara.ffxiv.botflox
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration

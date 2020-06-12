@@ -3,11 +3,13 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <link th:href='@{/webjars/bootstrap/css/bootstrap.min.css}' rel='stylesheet'>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>Header</title>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg" th:fragment="header(module, extras)">
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" th:fragment="header(module, extras)">
     <a class="navbar-brand" th:href="@{/}">Botflox & Friends</a>
     <ul class="nav navbar-nav">
         <li class="nav-item" th:classappend="${module == 'loot' ? 'active' : ''}">

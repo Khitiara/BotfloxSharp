@@ -1,0 +1,84 @@
+body {
+  padding-top: 5rem;
+}
+
+@font-face {
+  font-family: 'xivicons';
+  src: url('/fonts/xivicons.eot?l2chou');
+  src: url('/fonts/xivicons.eot?l2chou#iefix') format('embedded-opentype'),
+  url('/fonts/xivicons.ttf?l2chou') format('truetype'),
+  url('/fonts/xivicons.woff?l2chou') format('woff'),
+  url('/fonts/xivicons.svg?l2chou#xivicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+/*noinspection CssNoGenericFontName*/
+[class^="xiv-"], [class*=" xiv-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'xivicons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  font-size: 1.5rem;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.xiv-slot-body:before {
+  content: "\e900";
+}
+
+.xiv-slot-wrist:before {
+  content: "\e901";
+}
+
+.xiv-slot-ear:before {
+  content: "\e902";
+}
+
+.xiv-slot-feet:before {
+  content: "\e903";
+}
+
+.xiv-slot-arms:before {
+  content: "\e904";
+}
+
+.xiv-slot-head:before {
+  content: "\e905";
+}
+
+.xiv-slot-legs:before {
+  content: "\e906";
+}
+
+.xiv-slot-main_arm:before {
+  content: "\e907";
+}
+
+.xiv-slot-neck:before {
+  content: "\e908";
+}
+
+.xiv-slot-ring:before {
+  content: "\e909";
+}
+
+.xiv-slot-soul:before {
+  content: "\e90a";
+}
+
+.xiv-slot-off_hand:before {
+  content: "\e90b";
+}
+
+.xiv-slot-belt:before {
+  content: "\e90c";
+}

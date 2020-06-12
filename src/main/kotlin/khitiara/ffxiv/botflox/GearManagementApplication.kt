@@ -1,4 +1,4 @@
-package khitiara.ffxiv.gearmanagement
+package khitiara.ffxiv.botflox
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient
 class GearManagementApplication {
 
     @Bean
-    fun restTemplate(): WebClient =
+    fun webClient(): WebClient =
         WebClient.create("https://xivapi.com")
 }
 

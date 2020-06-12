@@ -1,4 +1,4 @@
-package khitiara.ffxiv.gearmanagement
+package khitiara.ffxiv.botflox
 
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*

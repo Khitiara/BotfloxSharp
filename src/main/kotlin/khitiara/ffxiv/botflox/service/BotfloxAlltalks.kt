@@ -1,14 +1,14 @@
-package khitiara.ffxiv.gearmanagement.service
+package khitiara.ffxiv.botflox.service
 
 import br.com.devsrsouza.jda.command.command
 import br.com.devsrsouza.jda.command.commands
 import br.com.devsrsouza.jda.command.fail
 import club.minnced.jda.reactor.ReactiveEventManager
-import khitiara.ffxiv.gearmanagement.CharacterRepository
-import khitiara.ffxiv.gearmanagement.MainConfiguration
-import khitiara.ffxiv.gearmanagement.StaticRepository
-import khitiara.ffxiv.gearmanagement.await
-import khitiara.ffxiv.gearmanagement.xivapi.XIVApi
+import khitiara.ffxiv.botflox.CharacterRepository
+import khitiara.ffxiv.botflox.MainConfiguration
+import khitiara.ffxiv.botflox.StaticRepository
+import khitiara.ffxiv.botflox.await
+import khitiara.ffxiv.botflox.xivapi.XIVApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.dv8tion.jda.api.JDA

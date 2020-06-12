@@ -1,4 +1,4 @@
-package khitiara.ffxiv.gearmanagement.xivapi
+package khitiara.ffxiv.botflox.xivapi
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties

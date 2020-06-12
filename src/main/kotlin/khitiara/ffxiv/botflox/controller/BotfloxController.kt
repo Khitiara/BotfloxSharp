@@ -1,6 +1,6 @@
-package khitiara.ffxiv.gearmanagement.controller
+package khitiara.ffxiv.botflox.controller
 
-import khitiara.ffxiv.gearmanagement.service.BotfloxAlltalks
+import khitiara.ffxiv.botflox.service.BotfloxAlltalks
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

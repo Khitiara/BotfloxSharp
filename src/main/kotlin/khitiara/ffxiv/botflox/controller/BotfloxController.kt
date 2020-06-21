@@ -19,6 +19,6 @@ class BotfloxController(private val botfloxAlltalks: BotfloxAlltalks) {
     @GetMapping("/invite")
     fun inviteLink(): String = "redirect:" + botfloxAlltalks.inviteUrl()
 
-    @GetMapping("/botflox")
+    @GetMapping("/discord")
     fun botfloxHome(): String = "botflox"
 }

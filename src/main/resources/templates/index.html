@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href='@{/webjars/bootstrap/css/bootstrap.min.css}' rel='stylesheet'>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <title>Botflox Alltalks</title>
+</head>
+<body class="text-center">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto masthead">
+        <nav th:replace="fragments/header :: header('build-bis', ~{})"></nav>
+    </header>
+    <main class="inner cover" role="main">
+        <h1 class="cover-heading">Botflox Alltalks</h1>
+        <p class="lead">
+            The safe, open-source, all-in-one utility for FFXIV discord servers and raid statics.
+        </p>
+        <p class="lead">
+            (Currently WIP)
+        </p>
+    </main>
+    <footer class="mt-auto mastfoot">
+        <div class="inner">
+            <p>Source available on <a href="https://github.com/robotbrain/ffxiv-gear-distribution-tool/">Github</a>.</p>
+        </div>
+    </footer>
+</div>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

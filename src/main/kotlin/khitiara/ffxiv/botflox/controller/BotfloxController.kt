@@ -21,4 +21,7 @@ class BotfloxController(private val botfloxAlltalks: BotfloxAlltalks) {
 
     @GetMapping("/discord")
     fun botfloxHome(): String = "botflox"
+
+    @GetMapping("/", "/index.html")
+    fun index(): String = "index"
 }

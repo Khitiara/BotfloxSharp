@@ -8,7 +8,10 @@ import khitiara.ffxiv.botflox.CharacterRepository
 import khitiara.ffxiv.botflox.MainConfiguration
 import khitiara.ffxiv.botflox.StaticRepository
 import khitiara.ffxiv.botflox.await
+import khitiara.ffxiv.botflox.bot.CharacterProfileGenerator
+import khitiara.ffxiv.botflox.xivapi.CharacterInfo
 import khitiara.ffxiv.botflox.xivapi.XIVApi
+import khitiara.ffxiv.botflox.xivapi.XivCharacterResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.dv8tion.jda.api.JDA
@@ -19,6 +22,8 @@ import net.dv8tion.jda.api.events.GenericEvent
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
+import java.io.ByteArrayOutputStream
+import javax.imageio.ImageIO
 import kotlin.reflect.KClass
 
 @Service
@@ -26,7 +31,8 @@ class BotfloxAlltalks(private val xivApi: XIVApi,
                       private val characterRepository: CharacterRepository,
                       private val staticRepository: StaticRepository,
                       private val conf: MainConfiguration,
-                      private val dbService: DatabaseService) {
+                      private val dbService: DatabaseService,
+                      private val imageService: CharacterProfileGenerator) {
     private val eventMgr = ReactiveEventManager()
     private val bot: JDA = JDABuilder.createDefault(conf.botToken).setEventManager(eventMgr)
         .setActivity(Activity.playing("with uplander friends!"))
@@ -77,6 +83,23 @@ class BotfloxAlltalks(private val xivApi: XIVApi,
                     }
                     else -> fail {
                         channel.sendMessage("Unknown how to handle the given number of arguments!").await()
+                    }
+                }
+            }
+            command("portrait") {
+                channel.sendTyping().await()
+                when (args.size) {
+                    1 -> args[0].toLongOrNull()?.let { id ->
+                        val record: XivCharacterResponse = xivApi.loadDataFromLodestone(id)
+                        val info = CharacterInfo(record)
+                        val img = imageService.generateProfileImage(info)
+                        val bytes: ByteArrayOutputStream = withContext(Dispatchers.IO) {
+                            ByteArrayOutputStream().also { ImageIO.write(img, "png", it) }
+                        }
+                        channel.sendFile(bytes.toByteArray(), "portrait_${info.lodestone}_${System.currentTimeMillis()}.png").await()
+                    }
+                    else -> fail {
+                        channel.sendMessage("Ummm").await()
                     }
                 }
             }

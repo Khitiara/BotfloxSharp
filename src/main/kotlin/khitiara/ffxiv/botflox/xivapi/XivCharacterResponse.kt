@@ -4,7 +4,7 @@ package khitiara.ffxiv.botflox.xivapi
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
-private val jobIdToIconPath: Map<Int, String> = mapOf(
+private val jobIdToIconPath: Map<Int?, String> = mapOf(
     1 to "/cj-icons/gladiator.png",
     2 to "/cj-icons/pugilist.png",
     3 to "/cj-icons/marauder.png",
@@ -41,6 +41,7 @@ private val jobIdToIconPath: Map<Int, String> = mapOf(
     34 to "/cj-icons/samurai.png",
     35 to "/cj-icons/redmage.png",
     36 to "/cj-icons/bluemage.png",
+    null to "/cj-icons/bluemage.png",
     37 to "/cj-icons/gunbreaker.png",
     38 to "/cj-icons/dancer.png"
 )
@@ -49,7 +50,7 @@ data class XivCharacterResponse(
     @JsonProperty("Character")
     var character: XivCharacterData,
     @JsonProperty("FreeCompany")
-    var freeCompany: FreeCompanyData
+    var freeCompany: FreeCompanyData?
 ) {
     data class XivCharacterData(
         @JsonProperty("ID")
@@ -67,7 +68,7 @@ data class XivCharacterResponse(
         @JsonProperty("Server")
         var server: String,
         @JsonProperty("Title")
-        var titleInfo: BasicNamed,
+        var titleInfo: BasicNamed?,
         @JsonProperty("TitleTop")
         var titleTop: Boolean,
         @JsonProperty("Tribe")
@@ -85,19 +86,19 @@ data class XivCharacterResponse(
         @JsonProperty("Name")
         var name: String,
         @JsonProperty("UnlockedState")
-        var unlockedState: BasicNamed
-    ) {
-        val iconUrl: String
-            @JsonProperty("IconUrl", access = JsonProperty.Access.READ_ONLY)
-            get() = jobIdToIconPath[unlockedState.id]
-                ?: (if (unlockedState.name == "Blue Mage (Limited Job)") jobIdToIconPath[36] else null)
-                ?: error("Somehow unrecognized job ${unlockedState.name}")
-    }
+        var unlockedState: BasicNamed,
+        @JsonProperty("Job")
+        var job: BasicNamed,
+        @JsonProperty("Class")
+        var clazz: BasicNamed,
+        @JsonProperty("IsSpecialised")
+        var specialist: Boolean
+    )
 
     data class FreeCompanyData(
         @JsonProperty("Name")
-        var name: String,
+        var name: String?,
         @JsonProperty("Tag")
-        var tag: String
+        var tag: String?
     )
 }

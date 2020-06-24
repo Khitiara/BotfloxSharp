@@ -14,7 +14,8 @@ class Static(
     @OneToMany(mappedBy = "static", targetEntity = XivCharacter::class)
     var characters: Set<XivCharacter> = HashSet(),
     @OneToMany(mappedBy = "static", targetEntity = BisListing::class)
-    var bisListings: Set<BisListing> = HashSet()
+    var bisListings: Set<BisListing> = HashSet(),
+    var fflogs: Int
 )
 
 @Entity

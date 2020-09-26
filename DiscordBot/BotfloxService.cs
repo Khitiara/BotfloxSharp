@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Botflox.Bot.Data;
@@ -39,6 +40,16 @@ namespace Botflox.Bot
             await _discord.LoginAndWaitAsync(TokenType.Bot,
                 _configuration.GetSection("Discord")?["Token"] ??
                 throw new InvalidOperationException("Null discord api token provided"), cancellationToken);
+            _logger.LogInformation($"Botflox Discord bot started with user @{_discord.CurrentUser}" +
+                                   $"<{_discord.CurrentUser.Id}>");
+            await Task.WhenAny(Task.WhenAll(_discord.Guilds.Select(async guild => {
+                if (await _database.FindAsync<GuildSettings>(guild.Id, cancellationToken) != null)
+                    return;
+                await _database.AddAsync(new GuildSettings {
+                    CommandPrefix = "?",
+                    GuildId = guild.Id
+                }, cancellationToken);
+            })), Task.Delay(Timeout.Infinite, cancellationToken));
         }
 
         public async Task StopAsync(CancellationToken cancellationToken) {

@@ -10,8 +10,8 @@ namespace XivApi.Character
 
         private static readonly string Columns = string.Join(',', "Character.ClassJobs",
             "Character.ClassJobsElemental", "Character.Name", "Character.DC", "Character.ID", "Character.Avatar",
-            "Character.Portrait", "Character.Server", "FreeCompany.Name", "FreeCompany.Tag", "Character.Title.Name",
-            "Character.Race", "Character.Tribe", "Character.TitleTop", "Character.Nameday");
+            "Character.Portrait", "character.Bio", "Character.Server", "FreeCompany.Name", "FreeCompany.Tag",
+            "Character.Title.Name", "Character.Race", "Character.Tribe", "Character.TitleTop", "Character.Nameday");
 
 
         private const string Data = "cj,fc";

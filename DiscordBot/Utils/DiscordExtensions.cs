@@ -28,6 +28,28 @@ namespace Botflox.Bot.Utils
             }
         }
 
+        public static async ValueTask LoginAndWaitAsync(this DiscordShardedClient client, TokenType tokenType,
+            string token, CancellationToken cancellationToken = default) {
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+            ShardChecker checker = new ShardChecker(client);
+
+            Task Ready() {
+                using (checker) {
+                    checker.AllShardsReady -= Ready;
+                    tcs.SetResult(true);
+                    return Task.CompletedTask;
+                }
+            }
+
+            checker.AllShardsReady += Ready;
+
+            await using (cancellationToken.Register(() => tcs.TrySetCanceled(cancellationToken))) {
+                await client.LoginAsync(tokenType, token);
+                await client.StartAsync();
+                await tcs.Task;
+            }
+        }
+
         public static Task LogDiscord(this ILogger logger, LogMessage message) {
             static LogLevel LevelConvert(LogSeverity severity) =>
                 severity switch {
@@ -43,7 +65,8 @@ namespace Botflox.Bot.Utils
             string msg = string.IsNullOrEmpty(message.Source)
                 ? message.Message
                 : $"{message.Source.PadRight(11)} {message.Message}";
-            return Task.Run(() => logger.Log(LevelConvert(message.Severity), message.Exception, "{timestamp} {msg}", DateTime.Now,
+            return Task.Run(() => logger.Log(LevelConvert(message.Severity), message.Exception, "{timestamp} {msg}",
+                DateTime.Now,
                 msg));
         }
     }

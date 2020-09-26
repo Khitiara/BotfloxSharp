@@ -1,13 +1,11 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using RestSharp;
 using RestSharp.Authenticators;
 
 namespace XivApi
 {
-    public class XivApi
+    public class XivApiClient
     {
         private readonly IRestClient _restClient;
 
@@ -24,7 +22,7 @@ namespace XivApi
             }
         }
 
-        public XivApi(string privateKey) {
+        public XivApiClient(string privateKey) {
             _restClient = new RestClient("https://xivapi.com") {
                 Authenticator = new Authenticator(privateKey),
                 ThrowOnDeserializationError = true, // Probably redundant but being safe here

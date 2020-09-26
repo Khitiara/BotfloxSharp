@@ -14,15 +14,15 @@ namespace Botflox.Bot
     {
         private readonly ILogger<BotfloxService> _logger;
         private readonly IConfiguration          _configuration;
-        private readonly IServiceProvider        _serviceProvider;
-        private readonly DiscordSocketClient     _discord;
+        private readonly DiscordShardedClient    _discord;
+        private readonly GobbieCommandHandler    _commandHandler;
 
-        public BotfloxService(ILogger<BotfloxService> logger, IConfiguration configuration, IServiceProvider serviceProvider) {
+        public BotfloxService(ILogger<BotfloxService> logger, IConfiguration configuration, DiscordShardedClient client,
+            GobbieCommandHandler commandHandler) {
             _logger = logger;
             _configuration = configuration;
-            _serviceProvider = serviceProvider;
-            _discord = new DiscordSocketClient();
-            _discord.Log += _logger.LogDiscord;
+            _discord = client;
+            _commandHandler = commandHandler;
         }
 
         public void Dispose() {
@@ -40,6 +40,7 @@ namespace Botflox.Bot
                 await _discord.LogoutAsync();
                 await _discord.StopAsync();
             }
+
             await Task.WhenAny(StopImpl(), Task.Delay(Timeout.Infinite, cancellationToken));
         }
     }

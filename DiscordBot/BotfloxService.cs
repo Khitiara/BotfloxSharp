@@ -5,9 +5,7 @@ using Botflox.Bot.Data;
 using Botflox.Bot.Utils;
 using Discord;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -18,27 +16,25 @@ namespace Botflox.Bot
         private readonly ILogger<BotfloxService> _logger;
         private readonly IConfiguration          _configuration;
         private readonly DiscordShardedClient    _discord;
-        private          GobbieCommandHandler?   _commandHandler;
-        private          BotfloxDatabase?        _database;
+        private readonly GobbieCommandHandler    _commandHandler;
+        private readonly BotfloxDatabase         _database;
         private readonly IServiceProvider        _provider;
-        private          IServiceScope?          _scope;
+
         public BotfloxService(ILogger<BotfloxService> logger, IConfiguration configuration, DiscordShardedClient client,
-            IServiceProvider provider) {
+            IServiceProvider provider, GobbieCommandHandler commandHandler, BotfloxDatabase database) {
             _logger = logger;
             _configuration = configuration;
             _discord = client;
             _provider = provider;
+            _commandHandler = commandHandler;
+            _database = database;
         }
 
         public void Dispose() {
-            _scope?.Dispose();
             _discord.Dispose();
         }
 
         public async Task StartAsync(CancellationToken cancellationToken) {
-            _scope = _provider.CreateScope();
-            _database = _scope.ServiceProvider.GetRequiredService<BotfloxDatabase>();
-            _commandHandler = _scope.ServiceProvider.GetRequiredService<GobbieCommandHandler>();
             await _commandHandler.InstallCommandsAsync();
             await _discord.LoginAndWaitAsync(TokenType.Bot,
                 _configuration.GetSection("Discord")?["Token"] ??
@@ -47,7 +43,6 @@ namespace Botflox.Bot
 
         public async Task StopAsync(CancellationToken cancellationToken) {
             async Task StopImpl() {
-                _scope?.Dispose();
                 await _discord.LogoutAsync();
                 await _discord.StopAsync();
             }

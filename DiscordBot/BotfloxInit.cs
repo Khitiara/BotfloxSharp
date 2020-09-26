@@ -26,9 +26,10 @@ namespace Botflox.Bot
 
         public static void ConfigureServices(IServiceCollection services) {
             services.AddSingleton(sp => sp)
-                .AddDbContextPool<BotfloxDatabase>((sp, o) => o
-                    .UseMySql(sp.GetRequiredService<IConfiguration>().GetConnectionString("BotfloxDb"), mySqlOpts =>
-                        mySqlOpts.ServerVersion(new Version(10, 5, 5), ServerType.MariaDb)))
+                .AddDbContext<BotfloxDatabase>((sp, o) => o
+                    .UseMySql(sp.GetRequiredService<IConfiguration>().GetConnectionString("BotfloxDb"),
+                        mySqlOpts => mySqlOpts.ServerVersion(new Version(10, 5, 5),
+                            ServerType.MariaDb)), ServiceLifetime.Singleton)
                 .AddSingleton(x => {
                     IConfiguration config = x.GetRequiredService<IConfiguration>();
                     ILogger<DiscordShardedClient> logger = x.GetRequiredService<ILogger<DiscordShardedClient>>();
@@ -44,15 +45,15 @@ namespace Botflox.Bot
                     return client;
                 })
                 .AddSingleton<Random>()
-                .AddScoped(x => new CommandService(new CommandServiceConfig {
+                .AddSingleton(x => new CommandService(new CommandServiceConfig {
                     CaseSensitiveCommands = false,
                     ThrowOnError = false,
                     DefaultRunMode = RunMode.Async,
                     IgnoreExtraArgs = false,
                     LogLevel = LogSeverity.Info
                 }))
-                .AddScoped(x => new XivApiClient(x.GetRequiredService<IConfiguration>()["XivApiKey"]))
-                .AddScoped<GobbieCommandHandler>()
+                .AddSingleton(x => new XivApiClient(x.GetRequiredService<IConfiguration>()["XivApiKey"]))
+                .AddSingleton<GobbieCommandHandler>()
                 .AddHostedService<BotfloxService>();
         }
     }

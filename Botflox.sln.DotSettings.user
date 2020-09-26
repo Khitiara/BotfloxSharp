@@ -1,0 +1,6 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\robot\.nuget\packages\restsharp.serializers.systemtextjson\106.11.5\lib\netstandard2.0\RestSharp.Serializers.SystemTextJson.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\robot\.nuget\packages\restsharp\106.11.5\lib\netstandard2.0\RestSharp.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\robot\.nuget\packages\discord.net.websocket\2.2.0\lib\netstandard2.1\Discord.Net.WebSocket.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>

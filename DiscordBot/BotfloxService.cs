@@ -19,14 +19,12 @@ namespace Botflox.Bot
         private readonly DiscordShardedClient    _discord;
         private readonly GobbieCommandHandler    _commandHandler;
         private readonly BotfloxDatabase         _database;
-        private readonly IServiceProvider        _provider;
 
         public BotfloxService(ILogger<BotfloxService> logger, IConfiguration configuration, DiscordShardedClient client,
-            IServiceProvider provider, GobbieCommandHandler commandHandler, BotfloxDatabase database) {
+            GobbieCommandHandler commandHandler, BotfloxDatabase database) {
             _logger = logger;
             _configuration = configuration;
             _discord = client;
-            _provider = provider;
             _commandHandler = commandHandler;
             _database = database;
         }

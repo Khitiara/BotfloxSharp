@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 
@@ -68,6 +70,17 @@ namespace Botflox.Bot.Utils
             return Task.Run(() => logger.Log(LevelConvert(message.Severity), message.Exception, "{timestamp} {msg}",
                 DateTime.Now,
                 msg));
+        }
+
+        public static async Task<Uri> GetInviteUrl(this BaseSocketClient client, GuildPermission permissions) {
+            RestApplication app = await client.GetApplicationInfoAsync();
+            StringBuilder builder = new StringBuilder("https://discord.com/oauth2/authorize?scope=bot&client_id=");
+            builder.Append(app.Id);
+            if (permissions != 0) {
+                builder.Append("&permissions=").Append((ulong)permissions);
+            }
+
+            return new Uri(builder.ToString());
         }
     }
 }

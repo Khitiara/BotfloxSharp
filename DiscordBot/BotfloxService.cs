@@ -58,5 +58,10 @@ namespace Botflox.Bot
 
             await Task.WhenAny(StopImpl(), Task.Delay(Timeout.Infinite, cancellationToken));
         }
+
+        public Task<Uri> GetInviteUri() {
+            return _discord.GetInviteUrl(GuildPermission.ViewChannel | GuildPermission.SendMessages |
+                                         GuildPermission.AttachFiles | GuildPermission.AddReactions);
+        }
     }
 }

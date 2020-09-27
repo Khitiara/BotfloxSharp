@@ -10,9 +10,9 @@ namespace Botflox.Bot
 {
     public class GobbieCommandHandler
     {
-        private readonly CommandService      _commands;
-        private readonly IServiceProvider    _serviceProvider;
-        private readonly BotfloxDatabase     _database;
+        private readonly CommandService       _commands;
+        private readonly IServiceProvider     _serviceProvider;
+        private readonly BotfloxDatabase      _database;
         private readonly DiscordShardedClient _client;
 
         public GobbieCommandHandler(DiscordShardedClient client, CommandService commands,
@@ -47,13 +47,8 @@ namespace Botflox.Bot
                 msg.Author.IsBot)
                 return;
 
-            using (msg.Channel.EnterTypingState()) {
-                ShardedCommandContext ctx = new ShardedCommandContext(_client, msg);
-                IResult? result = await _commands.ExecuteAsync(ctx, argPos, _serviceProvider);
-                if (result != null && !result.IsSuccess) {
-                    await ctx.Channel.SendMessageAsync(result.ErrorReason);
-                }
-            }
+            ShardedCommandContext ctx = new ShardedCommandContext(_client, msg);
+            await _commands.ExecuteAsync(ctx, argPos, _serviceProvider);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Botflox.Bot.Modules
         private readonly BotfloxDatabase _database;
         private readonly ReactionAwaiter _reactionAwaiter;
 
-        public CharacterLinkingModule(XivApiClient apiClient, BotfloxDatabase database, DiscordShardedClient client) {
+        public CharacterLinkingModule(XivApiClient apiClient, BotfloxDatabase database, BaseSocketClient client) {
             _apiClient = apiClient;
             _database = database;
             _reactionAwaiter = new ReactionAwaiter(client);

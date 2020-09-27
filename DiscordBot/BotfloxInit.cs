@@ -45,13 +45,17 @@ namespace Botflox.Bot
                     return client;
                 })
                 .AddSingleton<Random>()
-                .AddSingleton(x => new CommandService(new CommandServiceConfig {
-                    CaseSensitiveCommands = false,
-                    ThrowOnError = false,
-                    DefaultRunMode = RunMode.Async,
-                    IgnoreExtraArgs = false,
-                    LogLevel = LogSeverity.Info
-                }))
+                .AddSingleton(x => {
+                    CommandService commandService = new CommandService(new CommandServiceConfig {
+                        CaseSensitiveCommands = false,
+                        ThrowOnError = false,
+                        DefaultRunMode = RunMode.Sync,
+                        IgnoreExtraArgs = false,
+                        LogLevel = LogSeverity.Info
+                    });
+                    commandService.Log += x.GetRequiredService<ILogger<CommandService>>().LogDiscord;
+                    return commandService;
+                })
                 .AddSingleton(x => new XivApiClient(x.GetRequiredService<IConfiguration>()["XivApiKey"]))
                 .AddSingleton<GobbieCommandHandler>()
                 .AddHostedService<BotfloxService>();

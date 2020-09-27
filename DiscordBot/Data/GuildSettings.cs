@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Discord.Rest;
 
 namespace Botflox.Bot.Data
 {
@@ -12,6 +10,6 @@ namespace Botflox.Bot.Data
         public ulong GuildId { get; set; }
 
         [StringLength(5, MinimumLength = 1)]
-        public string CommandPrefix { get; set; }
+        public string CommandPrefix { get; set; } = "?";
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using RestSharp.Validation;
 
 namespace Botflox.Bot.Utils
 {

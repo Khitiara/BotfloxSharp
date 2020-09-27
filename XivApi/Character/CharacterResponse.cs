@@ -1,5 +1,4 @@
 ﻿using System;
-using RestSharp;
 
 namespace XivApi.Character
 {
@@ -7,20 +6,17 @@ namespace XivApi.Character
     {
         public Character Character { get; set; }
         public FreeCompany FreeCompany { get; set; }
+    }
 
-        private static readonly string Columns = string.Join(',', "Character.ClassJobs",
-            "Character.ClassJobsElemental", "Character.Name", "Character.DC", "Character.ID", "Character.Avatar",
-            "Character.Portrait", "character.Bio", "Character.Server", "FreeCompany.Name", "FreeCompany.Tag",
-            "Character.Title.Name", "Character.Race", "Character.Tribe", "Character.TitleTop", "Character.Nameday");
-
-
-        private const string Data = "cj,fc";
-
-        public IRestRequest CharacterById(long id) => new RestRequest("/character/{id}", DataFormat.Json)
-            .AddUrlSegment("id", id)
-            .AddQueryParameter("extended", "1")
-            .AddQueryParameter("language", "en")
-            .AddQueryParameter("data", Data)
-            .AddQueryParameter("columns", Columns);
+    public class CharacterSearchResult
+    {
+        public Uri Avatar { get; set; }
+        public int FeastMatches { get; set; }
+        public ulong ID { get; set; }
+        public string Lang { get; set; }
+        public string Name { get; set; }
+        public object Rank { get; set; }
+        public object RankIcon { get; set; }
+        public string Server { get; set; }
     }
 }

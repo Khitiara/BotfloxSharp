@@ -10,7 +10,7 @@ namespace XivApi.Character
         public List<ClassJob> ClassJobs { get; set; }
         public ClassJobsElemental ClassJobsElemental { get; set; }
         public string DC { get; set; }
-        public int ID { get; set; }
+        public ulong ID { get; set; }
         public string Name { get; set; }
         public string Nameday { get; set; }
         public Uri Portrait { get; set; }

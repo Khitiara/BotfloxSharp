@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using RestSharp;
 
 namespace XivApi.Pagination
@@ -15,7 +16,8 @@ namespace XivApi.Pagination
             for (int page = 0; !lastPage; page++) {
                 IRestRequest request = baseRequestBuilder();
                 request.AddQueryParameter("page", page.ToString());
-                PaginatedResponse<T> response = await apiClient.ApiGetAsync<PaginatedResponse<T>>(request, cancellationToken);
+                PaginatedResponse<T> response =
+                    await apiClient.ApiGetAsync<PaginatedResponse<T>>(request, cancellationToken);
                 if (response.Pagination.PageNext == null) {
                     lastPage = true;
                 }
@@ -23,6 +25,9 @@ namespace XivApi.Pagination
                 foreach (T result in response.Results) {
                     yield return result;
                 }
+
+                // Avoid rate issues with this big a response, 99% of usecases enumeration will be canceled before here
+                await Task.Delay(500, cancellationToken);
             }
         }
     }

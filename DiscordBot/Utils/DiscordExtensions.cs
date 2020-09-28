@@ -72,7 +72,7 @@ namespace Botflox.Bot.Utils
                 msg));
         }
 
-        public static async Task<Uri> GetInviteUrl(this BaseSocketClient client, GuildPermission permissions) {
+        public static async Task<Uri> GetInviteUriAsync(this BaseSocketClient client, GuildPermission permissions) {
             RestApplication app = await client.GetApplicationInfoAsync();
             StringBuilder builder = new StringBuilder("https://discord.com/oauth2/authorize?scope=bot&client_id=");
             builder.Append(app.Id);

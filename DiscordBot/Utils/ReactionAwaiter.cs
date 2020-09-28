@@ -57,11 +57,11 @@ namespace Botflox.Bot.Utils
             _client.ReactionAdded += ClientOnReactionAdded;
         }
 
-        private Task ClientOnReactionAdded(Cacheable<IUserMessage, ulong> msgCacheable,
+        private Task ClientOnReactionAdded(Cacheable<IUserMessage, ulong> msg,
             ISocketMessageChannel channel, SocketReaction reaction) {
             lock (_tokensLock) {
-                if (!_tokens.ContainsKey(msgCacheable.Id)) return Task.CompletedTask;
-                _tokens[msgCacheable.Id].Post(reaction);
+                if (!_tokens.ContainsKey(msg.Id)) return Task.CompletedTask;
+                _tokens[msg.Id].Post(reaction);
             }
 
             return Task.CompletedTask;

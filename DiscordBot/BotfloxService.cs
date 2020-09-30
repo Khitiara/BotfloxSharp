@@ -36,7 +36,7 @@ namespace Botflox.Bot
         public async Task StartAsync(CancellationToken cancellationToken) {
             await _commandHandler.InstallCommandsAsync();
             await _discord.LoginAndWaitAsync(TokenType.Bot,
-                _configuration.GetSection("Discord")?["Token"] ??
+                _configuration["DiscordToken"] ??
                 throw new InvalidOperationException("Null discord api token provided"), cancellationToken);
             _logger.LogInformation($"Botflox Discord bot started with user @{_discord.CurrentUser}" +
                                    $"<{_discord.CurrentUser.Id}>");

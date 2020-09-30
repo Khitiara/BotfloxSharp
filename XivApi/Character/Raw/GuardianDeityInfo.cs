@@ -1,9 +1,8 @@
-﻿namespace XivApi.Character
+﻿namespace XivApi.Character.Raw
 {
-    public class Job
+    public class GuardianDeityInfo
     {
-        public string Abbreviation { get; set; }
-        public ClassJobCategory ClassJobCategory { get; set; }
+        public object GuardianDeity { get; set; }
         public int ID { get; set; }
         public string Icon { get; set; }
         public string Name { get; set; }

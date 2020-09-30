@@ -1,4 +1,4 @@
-﻿namespace XivApi.Character
+﻿namespace XivApi.Character.Raw
 {
     public class UnlockedState
     {

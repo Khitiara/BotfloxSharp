@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace XivApi.Character
+namespace XivApi.Character.Raw
 {
     public class CharacterResponse
     {
         public Character Character { get; set; }
-        public FreeCompany FreeCompany { get; set; }
+        public FreeCompany? FreeCompany { get; set; }
     }
 
     public class CharacterSearchResult

@@ -1,8 +1,9 @@
-﻿namespace XivApi.Character
+﻿namespace XivApi.Character.Raw
 {
-    public class Race
+    public class Tribe
     {
         public int ID { get; set; }
+        public object Icon { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }
     }

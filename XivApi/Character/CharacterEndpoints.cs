@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RestSharp;
+using XivApi.Character.Raw;
 using XivApi.Pagination;
 
 namespace XivApi.Character
@@ -12,7 +13,8 @@ namespace XivApi.Character
         private static readonly string Columns = string.Join(',', "Character.ClassJobs",
             "Character.ClassJobsElemental", "Character.Name", "Character.DC", "Character.ID", "Character.Avatar",
             "Character.Portrait", "character.Bio", "Character.Server", "FreeCompany.Name", "FreeCompany.Tag",
-            "Character.Title.Name", "Character.Race", "Character.Tribe", "Character.TitleTop", "Character.Nameday");
+            "Character.Title.Name", "Character.Race", "Character.Tribe", "Character.TitleTop", "Character.Nameday",
+            "Character.GuardianDeity", "Character.GrandCompany", "Character.Gender");
 
 
         private const string Data = "cj,fc";
@@ -24,9 +26,12 @@ namespace XivApi.Character
             .AddQueryParameter("data", Data)
             .AddQueryParameter("columns", Columns);
 
-        public static Task<CharacterResponse> CharacterProfileAsync(this XivApiClient client, ulong id,
-            CancellationToken cancellationToken = default) =>
-            client.ApiGetAsync<CharacterResponse>(CharacterByIdRequest(id), cancellationToken);
+        public static async Task<CharacterProfile> CharacterProfileAsync(this XivApiClient client, ulong id,
+            CancellationToken cancellationToken = default) {
+            CharacterResponse response =
+                await client.ApiGetAsync<CharacterResponse>(CharacterByIdRequest(id), cancellationToken);
+            return await Task.Run(() => ProcessCharacterProfile(response), cancellationToken);
+        }
 
         public static IAsyncEnumerable<CharacterSearchResult> CharacterSearchAsync(this XivApiClient client,
             string name, string? dcserver = null, CancellationToken cancellationToken = default) {
@@ -39,11 +44,14 @@ namespace XivApi.Character
             return client.GetPaginatedAsync<CharacterSearchResult>(BuildSearch, cancellationToken);
         }
 
-        public static async ValueTask<CharacterResponse> FindSingleCharacterAsync(this XivApiClient client, string name,
+        public static async ValueTask<CharacterProfile> FindSingleCharacterAsync(this XivApiClient client, string name,
             string? dcserver = null, CancellationToken cancellationToken = default) {
             CharacterSearchResult searchResult = await client.CharacterSearchAsync(name, dcserver, cancellationToken)
                 .SingleAsync(cancellationToken);
             return await client.CharacterProfileAsync(searchResult.ID, cancellationToken);
         }
+
+        public static CharacterProfile ProcessCharacterProfile(CharacterResponse response) =>
+            new CharacterProfile(response);
     }
 }

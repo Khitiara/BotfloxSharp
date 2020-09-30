@@ -38,9 +38,10 @@ namespace Botflox.Bot
             // Are we in a guild?
             if (msg.Channel is SocketTextChannel guildChan) {
                 ulong guildId = guildChan.Guild.Id;
-                GuildSettings guildSettings = await _database.GuildsSettings
-                    .SingleAsync(s => s.GuildId == guildId);
-                prefix = guildSettings.CommandPrefix;
+                GuildSettings? guildSettings = await _database.GuildsSettings
+                    .SingleOrDefaultAsync(s => s.GuildId == guildId);
+                if (guildSettings != null)
+                    prefix = guildSettings.CommandPrefix;
             }
 
             if (!msg.HasStringPrefix(prefix, ref argPos) && !msg.HasMentionPrefix(_client.CurrentUser, ref argPos) ||

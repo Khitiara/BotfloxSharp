@@ -1,5 +1,6 @@
 using System;
 using Botflox.Bot.Data;
+using Botflox.Bot.Services;
 using Botflox.Bot.Utils;
 using Discord;
 using Discord.Commands;
@@ -45,11 +46,13 @@ namespace Botflox.Bot
                     return client;
                 })
                 .AddSingleton<Random>()
+                .AddHttpClient()
+                .AddSingleton<CharacterProfileGeneratorService>()
                 .AddSingleton(x => {
                     CommandService commandService = new CommandService(new CommandServiceConfig {
                         CaseSensitiveCommands = false,
                         ThrowOnError = false,
-                        DefaultRunMode = RunMode.Sync,
+                        DefaultRunMode = RunMode.Async,
                         IgnoreExtraArgs = false,
                         LogLevel = LogSeverity.Info
                     });

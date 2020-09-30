@@ -1,4 +1,4 @@
-﻿namespace XivApi.Character
+﻿namespace XivApi.Character.Raw
 {
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class ClassJobCategory

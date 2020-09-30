@@ -10,7 +10,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using XivApi;
 using XivApi.Character;
-using XivApi.Character.Raw;
 
 namespace Botflox.Bot.Modules
 {

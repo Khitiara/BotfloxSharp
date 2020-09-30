@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Botflox.Bot.Data;
-using Botflox.Bot.Utils;
 using Discord.Commands;
 using Discord.WebSocket;
 using XivApi;

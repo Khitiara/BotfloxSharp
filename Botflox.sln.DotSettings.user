@@ -3,4 +3,6 @@
   &lt;Assembly Path="C:\Users\robot\.nuget\packages\restsharp.serializers.systemtextjson\106.11.5\lib\netstandard2.0\RestSharp.Serializers.SystemTextJson.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\robot\.nuget\packages\restsharp\106.11.5\lib\netstandard2.0\RestSharp.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\robot\.nuget\packages\discord.net.websocket\2.2.0\lib\netstandard2.1\Discord.Net.WebSocket.dll" /&gt;&#xD;
-&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=DiscordBot_002FResources/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>

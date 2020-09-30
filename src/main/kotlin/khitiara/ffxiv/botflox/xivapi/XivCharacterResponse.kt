@@ -52,6 +52,14 @@ data class XivCharacterResponse(
     @JsonProperty("FreeCompany")
     var freeCompany: FreeCompanyData?
 ) {
+
+    data class GrandCompanyData(
+        @JsonProperty("Company")
+        var name: BasicNamed,
+        @JsonProperty("Rank")
+        var rank: BasicNamed
+    )
+
     data class XivCharacterData(
         @JsonProperty("ID")
         var id: Int,
@@ -76,7 +84,11 @@ data class XivCharacterResponse(
         @JsonProperty("Race")
         var race: BasicNamed,
         @JsonProperty("Nameday")
-        var nameday: String
+        var nameday: String,
+        @JsonProperty("GuardianDeity")
+        var guardian: BasicNamed,
+        @JsonProperty("GrandCompany")
+        var grandCompany: GrandCompanyData?
     )
 
     @JsonIgnoreProperties(ignoreUnknown = true)

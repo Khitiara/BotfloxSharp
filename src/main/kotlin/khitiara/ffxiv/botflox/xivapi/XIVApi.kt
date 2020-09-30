@@ -13,7 +13,7 @@ class XIVApi(private val client: WebClient) {
         const val characterDataUrlTemplate: String = "/character/{id}?extended=1&data=cj,fc&columns=" +
             "Character.ClassJobs,Character.Name,Character.DC,Character.ID,Character.Avatar,Character.Portrait," +
             "Character.Server,FreeCompany.Name,FreeCompany.Tag,Character.Title.Name,Character.Race,Character.Tribe," +
-            "Character.TitleTop,Character.Nameday"
+            "Character.TitleTop,Character.Nameday,Character.GuardianDeity,Character.GrandCompany"
     }
 
     @Cacheable("xivapi")

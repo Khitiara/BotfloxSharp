@@ -18,10 +18,23 @@ class ClassJobLevelData(raw: List<XivCharacterResponse.ClassJobInfo>) {
 data class CharacterInfo(val lodestone: Int, val name: String, val avatarUri: String, val portraitUri: String,
                          val cjInfo: ClassJobLevelData, val dc: String, val server: String, val title: String?,
                          val titleTop: Boolean?, val tribe: String, val race: String, val nameday: String,
-                         val fcName: String?, val fcTag: String?) {
-    constructor(response: XivCharacterResponse) : this(response.character.id, response.character.name,
-        response.character.avatar, response.character.portrait, ClassJobLevelData(response.character.classJobs),
-        response.character.dataCenter, response.character.server, response.character.titleInfo?.name,
-        response.character.titleTop, response.character.tribe.name, response.character.race.name,
-        response.character.nameday, response.freeCompany?.name, response.freeCompany?.tag)
+                         val guardian: String, val gcRank: String?, val fcName: String?, 
+                         val fcTag: String?) {
+    constructor(response: XivCharacterResponse) : this(
+        response.character.id, 
+        response.character.name,
+        response.character.avatar, 
+        response.character.portrait, 
+        ClassJobLevelData(response.character.classJobs),
+        response.character.dataCenter, 
+        response.character.server, 
+        response.character.titleInfo?.name,
+        response.character.titleTop, 
+        response.character.tribe.name, 
+        response.character.race.name,
+        response.character.nameday,
+        response.character.guardian.name,
+        response.character.grandCompany?.rank?.name,
+        response.freeCompany?.name, 
+        response.freeCompany?.tag)
 }

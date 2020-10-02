@@ -28,7 +28,8 @@ namespace BotfloxWeb
                     options.ClientId = Configuration["Authentication:Discord:ClientId"];
                     options.ClientSecret = Configuration["Authentication:Discord:ClientSecret"];
                 });
-            services.AddRazorPages();
+            services.AddRazorPages(options => {
+            });
             services.AddAuthorization(options => {
                 // Policies here
             });

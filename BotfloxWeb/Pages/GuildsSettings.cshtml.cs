@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
@@ -12,7 +11,6 @@ using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BotfloxWeb.Pages
@@ -28,7 +26,6 @@ namespace BotfloxWeb.Pages
             _database = database;
         }
 
-        [BindProperty]
         public IList<GuildSettingsDetailModel> OwnedGuilds { get; set; } = new List<GuildSettingsDetailModel>();
 
         public async Task OnGetAsync() {
@@ -36,8 +33,10 @@ namespace BotfloxWeb.Pages
                 throw new AuthenticationException("Unexpected discord api reply item type");
             }
 
+            RestApplication application = await _botflox.Discord.GetApplicationInfoAsync();
             OwnedGuilds = await _botflox.Discord.Guilds.ToAsyncEnumerable().WhereAwait(async guild =>
-                    guild.OwnerId == userId || (await _botflox.Discord.Rest.GetGuildUserAsync(guild.Id, userId))
+                    userId == application.Owner.Id || guild.OwnerId == userId ||
+                    (await _botflox.Discord.Rest.GetGuildUserAsync(guild.Id, userId))
                     .GuildPermissions.Administrator)
                 .SelectAwait(async guild => new GuildSettingsDetailModel(await _database.GuildsSettings
                     .FindAsync(guild.Id) ?? new GuildSettings {GuildId = guild.Id, CommandPrefix = "?"}, guild.Name))
@@ -50,18 +49,23 @@ namespace BotfloxWeb.Pages
             }
 
             ulong guildId = ulong.Parse(Request.Form["GuildId"]);
-            IGuildUser? guildUser = (IGuildUser?) _botflox.Discord.GetGuild(guildId).GetUser(userId) ??
-                                    await _botflox.Discord.Rest.GetGuildUserAsync(guildId, userId);
-            if (guildUser == null) {
-                throw new AuthenticationException("Logged in discord user is not part of target guild!");
+            if (userId != (await _botflox.Discord.GetApplicationInfoAsync()).Owner.Id) {
+                SocketGuild guild = _botflox.Discord.GetGuild(guildId);
+                if (userId != guild.OwnerId) {
+                    IGuildUser? guildUser = (IGuildUser?) guild.GetUser(userId) ??
+                                            await _botflox.Discord.Rest.GetGuildUserAsync(guildId, userId);
+                    if (guildUser == null) {
+                        throw new AuthenticationException("Logged in discord user is not part of target guild!");
+                    }
+
+                    if (!guildUser.GuildPermissions.Administrator) {
+                        throw new AuthenticationException(
+                            "Logged in discord user lacks admin privileges in target guild!");
+                    }
+                }
             }
 
-            if (!guildUser.GuildPermissions.Administrator) {
-                throw new AuthenticationException("Logged in discord user lacks admin privileges in target guild!");
-            }
-
-            string commandPrefix = Request.Form["CommandPrefix"];
-            commandPrefix = commandPrefix.TrimStart();
+            string commandPrefix = ((string) Request.Form["CommandPrefix"]).TrimStart();
             if (string.IsNullOrWhiteSpace(commandPrefix)) {
                 throw new InvalidOperationException("Cannot set empty command prefix!");
             }

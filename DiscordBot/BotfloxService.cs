@@ -19,6 +19,10 @@ namespace Botflox.Bot
         private readonly DiscordShardedClient    _discord;
         private readonly GobbieCommandHandler    _commandHandler;
         private readonly BotfloxDatabase         _database;
+        private readonly ShardChecker            _shardChecker;
+
+        private const GuildPermission ExpectedPerms = GuildPermission.ViewChannel | GuildPermission.SendMessages |
+                                                       GuildPermission.AttachFiles | GuildPermission.AddReactions;
 
         public BotfloxService(ILogger<BotfloxService> logger, IConfiguration configuration, DiscordShardedClient client,
             GobbieCommandHandler commandHandler, BotfloxDatabase database) {
@@ -27,6 +31,13 @@ namespace Botflox.Bot
             _discord = client;
             _commandHandler = commandHandler;
             _database = database;
+            _shardChecker = new ShardChecker(_discord);
+            _shardChecker.AllShardsReady += ShardCheckerOnAllShardsReadyAsync;
+        }
+
+        private async Task ShardCheckerOnAllShardsReadyAsync() {
+            _logger.LogInformation($"Botflox Discord bot started with user @{_discord.CurrentUser}" +
+                                   $"<{_discord.CurrentUser.Id}>");
         }
 
         public void Dispose() {
@@ -35,19 +46,10 @@ namespace Botflox.Bot
 
         public async Task StartAsync(CancellationToken cancellationToken) {
             await _commandHandler.InstallCommandsAsync();
-            await _discord.LoginAndWaitAsync(TokenType.Bot,
+            await _discord.LoginAsync(TokenType.Bot,
                 _configuration["DiscordToken"] ??
-                throw new InvalidOperationException("Null discord api token provided"), cancellationToken);
-            _logger.LogInformation($"Botflox Discord bot started with user @{_discord.CurrentUser}" +
-                                   $"<{_discord.CurrentUser.Id}>");
-            await Task.WhenAny(Task.WhenAll(_discord.Guilds.Select(async guild => {
-                if (await _database.FindAsync<GuildSettings>(guild.Id, cancellationToken) != null)
-                    return;
-                await _database.AddAsync(new GuildSettings {
-                    CommandPrefix = "?",
-                    GuildId = guild.Id
-                }, cancellationToken);
-            })), Task.Delay(Timeout.Infinite, cancellationToken));
+                throw new InvalidOperationException("Null discord api token provided"));
+            await _discord.StartAsync();
         }
 
         public async Task StopAsync(CancellationToken cancellationToken) {
@@ -60,8 +62,7 @@ namespace Botflox.Bot
         }
 
         public Task<Uri> GetInviteUriAsync() {
-            return _discord.GetInviteUriAsync(GuildPermission.ViewChannel | GuildPermission.SendMessages |
-                                         GuildPermission.AttachFiles | GuildPermission.AddReactions);
+            return _discord.GetInviteUriAsync(ExpectedPerms);
         }
     }
 }

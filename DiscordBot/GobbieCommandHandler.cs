@@ -40,8 +40,14 @@ namespace Botflox.Bot
                 ulong guildId = guildChan.Guild.Id;
                 GuildSettings? guildSettings = await _database.GuildsSettings
                     .SingleOrDefaultAsync(s => s.GuildId == guildId);
-                if (guildSettings != null)
-                    prefix = guildSettings.CommandPrefix;
+                if (guildSettings == null) {
+                    guildSettings = new GuildSettings {
+                        GuildId = guildId,
+                        CommandPrefix = prefix
+                    };
+                    await _database.GuildsSettings.AddAsync(guildSettings);
+                    await _database.SaveChangesAsync();
+                } else prefix = guildSettings.CommandPrefix;
             }
 
             if (!msg.HasStringPrefix(prefix, ref argPos) && !msg.HasMentionPrefix(_client.CurrentUser, ref argPos) ||

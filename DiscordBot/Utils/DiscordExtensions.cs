@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Rest;
@@ -11,47 +10,6 @@ namespace Botflox.Bot.Utils
 {
     public static class DiscordExtensions
     {
-        public static async ValueTask LoginAndWaitAsync(this DiscordSocketClient client, TokenType tokenType,
-            string token, CancellationToken cancellationToken = default) {
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-
-            Task Ready() {
-                client.Ready -= Ready;
-                tcs.SetResult(true);
-                return Task.CompletedTask;
-            }
-
-            client.Ready += Ready;
-
-            await using (cancellationToken.Register(() => tcs.TrySetCanceled(cancellationToken))) {
-                await client.LoginAsync(tokenType, token);
-                await client.StartAsync();
-                await tcs.Task;
-            }
-        }
-
-        public static async ValueTask LoginAndWaitAsync(this DiscordShardedClient client, TokenType tokenType,
-            string token, CancellationToken cancellationToken = default) {
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-            ShardChecker checker = new ShardChecker(client);
-
-            Task Ready() {
-                using (checker) {
-                    checker.AllShardsReady -= Ready;
-                    tcs.SetResult(true);
-                    return Task.CompletedTask;
-                }
-            }
-
-            checker.AllShardsReady += Ready;
-
-            await using (cancellationToken.Register(() => tcs.TrySetCanceled(cancellationToken))) {
-                await client.LoginAsync(tokenType, token);
-                await client.StartAsync();
-                await tcs.Task;
-            }
-        }
-
         public static Task LogDiscord(this ILogger logger, LogMessage message) {
             static LogLevel LevelConvert(LogSeverity severity) =>
                 severity switch {
@@ -72,12 +30,12 @@ namespace Botflox.Bot.Utils
                 msg));
         }
 
-        public static async Task<Uri> GetInviteUriAsync(this BaseSocketClient client, GuildPermission permissions) {
+        public static async Task<Uri> GetInviteUriAsync(this BaseSocketClient client, GuildPermission permissions = 0) {
             RestApplication app = await client.GetApplicationInfoAsync();
             StringBuilder builder = new StringBuilder("https://discord.com/oauth2/authorize?scope=bot&client_id=");
             builder.Append(app.Id);
             if (permissions != 0) {
-                builder.Append("&permissions=").Append((ulong)permissions);
+                builder.Append("&permissions=").Append((ulong) permissions);
             }
 
             return new Uri(builder.ToString());

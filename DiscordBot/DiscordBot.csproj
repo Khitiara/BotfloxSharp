@@ -6,6 +6,7 @@
         <RootNamespace>Botflox.Bot</RootNamespace>
         <LangVersion>9</LangVersion>
         <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>

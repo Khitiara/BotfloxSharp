@@ -39,6 +39,7 @@ namespace Botflox.Bot
 
         public void Dispose() {
             _discord.Dispose();
+            FontUtils.DisposeFonts();
             _shardChecker.Dispose();
         }
 

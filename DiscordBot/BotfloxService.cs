@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Botflox.Bot.Data;
@@ -21,8 +20,6 @@ namespace Botflox.Bot
         private readonly BotfloxDatabase         _database;
         private readonly ShardChecker            _shardChecker;
 
-        private const GuildPermission ExpectedPerms = GuildPermission.ViewChannel | GuildPermission.SendMessages |
-                                                       GuildPermission.AttachFiles | GuildPermission.AddReactions;
 
         public BotfloxService(ILogger<BotfloxService> logger, IConfiguration configuration, DiscordShardedClient client,
             GobbieCommandHandler commandHandler, BotfloxDatabase database) {
@@ -42,6 +39,7 @@ namespace Botflox.Bot
 
         public void Dispose() {
             _discord.Dispose();
+            _shardChecker.Dispose();
         }
 
         public async Task StartAsync(CancellationToken cancellationToken) {
@@ -61,8 +59,5 @@ namespace Botflox.Bot
             await Task.WhenAny(StopImpl(), Task.Delay(Timeout.Infinite, cancellationToken));
         }
 
-        public Task<Uri> GetInviteUriAsync() {
-            return _discord.GetInviteUriAsync(ExpectedPerms);
-        }
     }
 }

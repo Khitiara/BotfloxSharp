@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AspNet.Security.OAuth.Discord;
 using Botflox.Bot;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,7 +19,19 @@ namespace BotfloxWeb
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+            services.AddAuthentication(options => {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = DiscordAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddDiscord(options => {
+                    options.ClientId = Configuration["Authentication:Discord:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Discord:ClientSecret"];
+                });
             services.AddRazorPages();
+            services.AddAuthorization(options => {
+                // Policies here
+            });
             BotfloxInit.ConfigureServices(services);
         }
 
@@ -41,6 +50,7 @@ namespace BotfloxWeb
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Botflox.Bot;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
@@ -11,11 +9,17 @@ namespace BotfloxWeb.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private readonly BotfloxBot      _botflox;
 
-        public IndexModel(ILogger<IndexModel> logger) {
+        public IndexModel(ILogger<IndexModel> logger, BotfloxBot botflox) {
             _logger = logger;
+            _botflox = botflox;
         }
 
-        public void OnGet() { }
+        public Uri InviteUri { get; set; }
+
+        public async Task OnGetAsync() {
+            InviteUri = await _botflox.GetInviteUriAsync();
+        }
     }
 }

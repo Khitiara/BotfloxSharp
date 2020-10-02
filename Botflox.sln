@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBot", "DiscordBot\Di
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XivApi", "XivApi\XivApi.csproj", "{66EFE034-3A6D-4F8A-995D-319FB817C7BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotfloxWeb", "BotfloxWeb\BotfloxWeb.csproj", "{3BD7DF3A-C0B6-4D7B-8703-76377875B726}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{66EFE034-3A6D-4F8A-995D-319FB817C7BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66EFE034-3A6D-4F8A-995D-319FB817C7BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66EFE034-3A6D-4F8A-995D-319FB817C7BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD7DF3A-C0B6-4D7B-8703-76377875B726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD7DF3A-C0B6-4D7B-8703-76377875B726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD7DF3A-C0B6-4D7B-8703-76377875B726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD7DF3A-C0B6-4D7B-8703-76377875B726}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

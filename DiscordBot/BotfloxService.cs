@@ -22,7 +22,7 @@ namespace Botflox.Bot
         private readonly ShardChecker            _shardChecker;
 
         private const GuildPermission ExpectedPerms = GuildPermission.ViewChannel | GuildPermission.SendMessages |
-                                                       GuildPermission.AttachFiles | GuildPermission.AddReactions;
+                                                      GuildPermission.AttachFiles | GuildPermission.AddReactions;
 
         public BotfloxService(ILogger<BotfloxService> logger, IConfiguration configuration, DiscordShardedClient client,
             GobbieCommandHandler commandHandler, BotfloxDatabase database) {
@@ -42,6 +42,7 @@ namespace Botflox.Bot
 
         public void Dispose() {
             _discord.Dispose();
+            FontUtils.DisposeFonts();
         }
 
         public async Task StartAsync(CancellationToken cancellationToken) {

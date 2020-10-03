@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Botflox.Bot.Utils
 {
-    public static class FontUtils
+    public sealed class FontUtils : IDisposable
     {
-        private static readonly List<CoTaskMemHandle> FontUnloaders = new List<CoTaskMemHandle>();
+        private readonly List<CoTaskMemHandle> FontUnloaders = new List<CoTaskMemHandle>();
 
-        public static void DisposeFonts() {
+        public void Dispose() {
             foreach (CoTaskMemHandle coTaskMemHandle in FontUnloaders) {
                 coTaskMemHandle.Dispose();
             }
@@ -42,7 +42,7 @@ namespace Botflox.Bot.Utils
             }
         }
 
-        public static async ValueTask<FontFamily> LoadFontResource(string resourcePath) {
+        public async ValueTask<FontFamily> LoadFontResource(string resourcePath) {
             IntPtr handle;
             int length;
             await using (Stream? stream = Assembly.GetCallingAssembly().GetManifestResourceStream(resourcePath)) {

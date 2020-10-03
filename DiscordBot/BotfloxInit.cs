@@ -48,6 +48,7 @@ namespace Botflox.Bot
                 .AddSingleton<Random>()
                 .AddHttpClient()
                 .AddSingleton<CharacterProfileGeneratorService>()
+                .AddSingleton<FontUtils>()
                 .AddSingleton(x => {
                     CommandService commandService = new CommandService(new CommandServiceConfig {
                         CaseSensitiveCommands = false,

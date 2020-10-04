@@ -5,6 +5,7 @@ using Botflox.Bot.Utils;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,12 +26,19 @@ namespace Botflox.Bot
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hb, sc) => ConfigureServices(sc));
 
+        private static string DbConnectionString(IServiceProvider sp) {
+            IConfiguration configuration = sp.GetRequiredService<IConfiguration>();
+            return new SqlConnectionStringBuilder(configuration.GetConnectionString("BotfloxDb")) {
+                Password = configuration["DbPassword"]
+            }.ConnectionString;
+        }
+
         public static void ConfigureServices(IServiceCollection services) {
             services.AddSingleton(sp => sp)
                 .AddDbContext<BotfloxDatabase>((sp, o) => o
-                    .UseMySql(sp.GetRequiredService<IConfiguration>().GetConnectionString("BotfloxDb"),
-                        mySqlOpts => mySqlOpts.ServerVersion(new Version(10, 5, 5),
-                            ServerType.MariaDb)), ServiceLifetime.Singleton)
+                        .UseMySql(DbConnectionString(sp), mySqlOpts => mySqlOpts
+                            .ServerVersion(new Version(10, 5, 5), ServerType.MariaDb)),
+                    ServiceLifetime.Singleton)
                 .AddSingleton(x => {
                     IConfiguration config = x.GetRequiredService<IConfiguration>();
                     ILogger<DiscordShardedClient> logger = x.GetRequiredService<ILogger<DiscordShardedClient>>();

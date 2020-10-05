@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -12,37 +12,40 @@ namespace Botflox.Bot.Utils
 {
     public sealed class FontUtils : IDisposable
     {
-        private readonly List<CoTaskMemHandle> FontUnloaders = new List<CoTaskMemHandle>();
+        private readonly PrivateFontCollection _fontCollection = new PrivateFontCollection();
+        private          int                   _currentFamily;
+        private readonly List<IntPtr>          _fontUnloaders = new List<IntPtr>();
+        private          bool                  _disposed;
+
+
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<FontFamily>> _completionSourceCache =
+            new ConcurrentDictionary<string, TaskCompletionSource<FontFamily>>();
 
         public void Dispose() {
-            foreach (CoTaskMemHandle coTaskMemHandle in FontUnloaders) {
-                coTaskMemHandle.Dispose();
+            if (_disposed) {
+                return;
             }
 
-            FontUnloaders.Clear();
-        }
-
-        private class CoTaskMemHandle : IDisposable
-        {
-            public readonly  IntPtr       Handle;
-            private readonly IDisposable? _wrapped;
-
-            public CoTaskMemHandle(IntPtr handle, IDisposable? wrapped = null) {
-                Handle = handle;
-                _wrapped = wrapped;
+            foreach (IntPtr coTaskMemHandle in _fontUnloaders) {
+                Marshal.FreeCoTaskMem(coTaskMemHandle);
             }
 
-            public void Dispose() {
-                _wrapped?.Dispose();
-                Marshal.FreeCoTaskMem(Handle);
-            }
+            _fontCollection.Dispose();
+            _fontUnloaders.Clear();
+            _currentFamily = 0;
 
-            public static implicit operator IntPtr(CoTaskMemHandle handle) {
-                return handle.Handle;
-            }
+            _disposed = true;
         }
 
         public async ValueTask<FontFamily> LoadFontResource(string resourcePath) {
+            if (_disposed)
+                throw new ObjectDisposedException("FontUtils");
+            TaskCompletionSource<FontFamily> tcs = new TaskCompletionSource<FontFamily>();
+            if (!_completionSourceCache.TryAdd(resourcePath, tcs)) {
+                return await _completionSourceCache[resourcePath].Task;
+            }
+
+            TaskCompletionSource<FontFamily> taskSource = tcs;
             IntPtr handle;
             int length;
 
@@ -57,7 +60,8 @@ namespace Botflox.Bot.Utils
 
                 UnmanagedMemoryStream handleStream;
                 unsafe {
-                    handleStream = new UnmanagedMemoryStream((byte*) handle.ToPointer(), length, length, FileAccess.ReadWrite);
+                    handleStream = new UnmanagedMemoryStream((byte*) handle.ToPointer(), length, length,
+                        FileAccess.ReadWrite);
                 }
 
                 await using (handleStream) {
@@ -65,10 +69,11 @@ namespace Botflox.Bot.Utils
                 }
             }
 
-            PrivateFontCollection fontCollection = new PrivateFontCollection();
-            await Task.Run(() => fontCollection.AddMemoryFont(handle, length));
-            FontUnloaders.Add(new CoTaskMemHandle(handle, fontCollection));
-            return fontCollection.Families[0];
+            await Task.Run(() => _fontCollection.AddMemoryFont(handle, length));
+            _fontUnloaders.Add(handle);
+            FontFamily family = _fontCollection.Families[_currentFamily++];
+            taskSource.SetResult(family);
+            return family;
         }
     }
 }

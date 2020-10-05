@@ -2,9 +2,11 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Botflox.Bot.Data;
+using Botflox.Bot.Modules;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Botflox.Bot
 {
@@ -24,7 +26,9 @@ namespace Botflox.Bot
         }
 
         public async Task InstallCommandsAsync() {
-            await _commands.AddModulesAsync(Assembly.GetExecutingAssembly(), _serviceProvider);
+            foreach (IModuleCollection collection in _serviceProvider.GetServices<IModuleCollection>()) {
+                await collection.AddModulesAsync(_commands, _serviceProvider);
+            }
             _client.MessageReceived += HandleCommandAsync;
         }
 

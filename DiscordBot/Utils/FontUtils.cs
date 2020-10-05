@@ -45,7 +45,8 @@ namespace Botflox.Bot.Utils
         public async ValueTask<FontFamily> LoadFontResource(string resourcePath) {
             IntPtr handle;
             int length;
-            await using (Stream? stream = Assembly.GetCallingAssembly().GetManifestResourceStream(resourcePath)) {
+
+            await using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath)) {
                 if (stream == null) {
                     throw new FileNotFoundException("Could not find specified font resource",
                         $"application://{resourcePath}");
@@ -56,7 +57,7 @@ namespace Botflox.Bot.Utils
 
                 UnmanagedMemoryStream handleStream;
                 unsafe {
-                    handleStream = new UnmanagedMemoryStream((byte*) handle.ToPointer(), length);
+                    handleStream = new UnmanagedMemoryStream((byte*) handle.ToPointer(), length, length, FileAccess.ReadWrite);
                 }
 
                 await using (handleStream) {

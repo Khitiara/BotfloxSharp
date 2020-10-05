@@ -7,6 +7,7 @@ using Botflox.Bot.Services;
 using Discord.Commands;
 using XivApi;
 using XivApi.Character;
+using Botflox.Bot.Utils;
 
 namespace Botflox.Bot.Modules
 {
@@ -14,12 +15,14 @@ namespace Botflox.Bot.Modules
     {
         private readonly XivApiClient                     _apiClient;
         private readonly BotfloxDatabase                  _database;
+        private readonly FontUtils                        _fontUtils;
         private readonly CharacterProfileGeneratorService _profileGeneratorService;
 
-        public CharacterProfileModule(XivApiClient apiClient, BotfloxDatabase database,
+        public CharacterProfileModule(XivApiClient apiClient, BotfloxDatabase database, FontUtils fontUtils, 
             CharacterProfileGeneratorService profileGeneratorService) {
             _apiClient = apiClient;
             _database = database;
+            _fontUtils = fontUtils;
             _profileGeneratorService = profileGeneratorService;
         }
 
@@ -27,7 +30,7 @@ namespace Botflox.Bot.Modules
         public async Task CharacterProfile(ulong lodestoneId) {
             using (Context.Channel.EnterTypingState()) {
                 CharacterProfile profile = await _apiClient.CharacterProfileAsync(lodestoneId);
-                Image profileImage = await _profileGeneratorService.RenderCharacterProfile(profile);
+                Image profileImage = await _profileGeneratorService.RenderCharacterProfile(profile, _fontUtils);
                 await using MemoryStream memoryStream = new MemoryStream();
                 await Task.Run(() => profileImage.Save(memoryStream, ImageFormat.Png));
                 memoryStream.Seek(0, SeekOrigin.Begin);

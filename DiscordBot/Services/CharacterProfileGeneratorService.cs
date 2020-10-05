@@ -82,13 +82,15 @@ namespace Botflox.Bot.Services
             return (level == MAXLEVEL_EUREKA) ? bOrange : ((level > 0) ? bWhite : bGray);
         }
 
-        public async ValueTask<Image> RenderCharacterProfile(CharacterProfile profile) {
-            Font nameFont = new Font(FontFamily.GenericSansSerif, 48, FontStyle.Regular, GraphicsUnit.Pixel),
-                titleFont = new Font(FontFamily.GenericSansSerif, 30, FontStyle.Regular, GraphicsUnit.Pixel);
+        public async ValueTask<Image> RenderCharacterProfile(CharacterProfile profile, FontUtils fontUtils) {
+            FontFamily lato = await fontUtils.LoadFontResource("Botflox.Bot.Resources.Lato-Regular.ttf");
+
+            Font big = new Font(lato, 48, FontStyle.Regular, GraphicsUnit.Pixel),
+              medium = new Font(lato, 30, FontStyle.Regular, GraphicsUnit.Pixel),
+              number = new Font(lato, 28, FontStyle.Regular, GraphicsUnit.Pixel);
 
             HttpClient? client = _httpClientFactory.CreateClient("CharacterProfileGeneration");
-            Image portrait;
-            Image bg = await Task.Run(() => Resources.ProfileRight);
+            Image portrait, bg = await Task.Run(() => Resources.ProfileBg);
             Image canvas = new Bitmap(1310, 873, PixelFormat.Format32bppArgb);
 
             await using (Stream p = await client.GetStreamAsync(profile.Portrait)) {
@@ -100,22 +102,23 @@ namespace Botflox.Bot.Services
                 graphics.DrawImage(bg, new Rectangle(640, 0, 670, 873));
                 graphics.DrawImage(portrait, new Rectangle(0, 0, 640, 873));
 
-                graphics.DrawStringCentered(profile.Name, nameFont, bWhite, 974, profile.TitleTop ? 117 : 81);
-                graphics.DrawStringCentered($"<{profile.Title}>", titleFont, bWhite, 974, profile.TitleTop ? 67 : 124);
+                graphics.DrawStringCentered(profile.Name, big, bWhite, 974, profile.TitleTop ? 117 : 81);
+                graphics.DrawStringCentered($"<{profile.Title}>", medium, bWhite, 974, profile.TitleTop ? 67 : 124);
 
-                graphics.DrawStringCentered($"{profile.Server} [{profile.DataCenter}]", nameFont, bWhite, 974, 224);
-                graphics.DrawString($"{profile.Race}, {profile.Tribe}", titleFont, bWhite, 688, 298);
-                graphics.DrawString(profile.GuardianDeity, titleFont, bWhite, 688, 361);
-                graphics.DrawString(profile.GrandCompanyRank ?? "-", titleFont, bWhite, 688, 428);
-                graphics.DrawString(profile.FreeCompanyName ?? "-", titleFont, bWhite, 688, 491);
+                graphics.DrawStringCentered($"{profile.Server} [{profile.DataCenter}]", big, bWhite, 974, 224);
+
+                graphics.DrawString($"{profile.Race}, {profile.Tribe}", medium, bWhite, 688, 298);
+                graphics.DrawString(profile.GuardianDeity, medium, bWhite, 688, 361);
+                graphics.DrawString(profile.GrandCompanyRank ?? "-", medium, bWhite, 688, 428);
+                graphics.DrawString(profile.FreeCompanyName ?? "-", medium, bWhite, 688, 491);
 
                 foreach (var item in coords) {
                     int? jobLevel = profile.ClassJobLevels[item.Key].Value.Level;
-                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", titleFont, GetJobLevelColor(item.Key, jobLevel ?? 0), item.Value.Item1, item.Value.Item2);
+                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetJobLevelColor(item.Key, jobLevel ?? 0), item.Value.Item1, item.Value.Item2);
                 }
 
                 int? eurekaLevel = profile.ContentLevels.ElementalLevel;
-                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", titleFont, GetEurekaLevelColor(eurekaLevel ?? 0), EUREKA_X, EUREKA_Y);
+                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number, GetEurekaLevelColor(eurekaLevel ?? 0), EUREKA_X, EUREKA_Y);
             }
 
             return canvas;

@@ -63,9 +63,9 @@ namespace Botflox.Bot {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ProfileRight {
+        internal static System.Drawing.Bitmap ProfileBg {
             get {
-                object obj = ResourceManager.GetObject("ProfileRight", resourceCulture);
+                object obj = ResourceManager.GetObject("ProfileBg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

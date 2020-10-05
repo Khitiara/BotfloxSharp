@@ -13,15 +13,13 @@ namespace Botflox.Bot.Services
 {
     public class CharacterProfileGeneratorService
     {
-        internal const int MAXLEVEL = 80; // up on 6.0 idk
-        internal const int MAXLEVEL_BLU = 60;
-        internal const int MAXLEVEL_EUREKA = 60;
         internal const int CORNER_X = 684;
         internal const int CORNER_Y = 658;
         internal const int SPACING_X = 48;
         internal const int SPACING_Y = 83;
         internal const int EUREKA_X = CORNER_X + SPACING_X * 12;
         internal const int EUREKA_Y = CORNER_Y;
+        internal const int EUREKA_MAXLVL = 60;
 
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -68,18 +66,8 @@ namespace Botflox.Bot.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        private Brush GetJobLevelColor(int id, int level) {
-            IClassJob job = ClassJobs.ById[id];
-            int max = MAXLEVEL;
-
-            if (job is LimitedCombatJob) 
-                max = MAXLEVEL_BLU;
-
-            return (level == max) ? bOrange : ((level > 0) ? bWhite : bGray);
-        }
-
-        private Brush GetEurekaLevelColor(int level) {
-            return (level == MAXLEVEL_EUREKA) ? bOrange : ((level > 0) ? bWhite : bGray);
+        private Brush GetLevelColor(bool? isMaxed) {
+            return (isMaxed == null) ? bGray : ((bool) isMaxed ? bOrange : bWhite);
         }
 
         public async ValueTask<Image> RenderCharacterProfile(CharacterProfile profile, FontUtils fontUtils) {
@@ -115,12 +103,15 @@ namespace Botflox.Bot.Services
                 graphics.DrawString(fc, medium, bWhite, 688, 491);
 
                 foreach (var item in coords) {
-                    int? jobLevel = profile.ClassJobLevels[item.Key].Value.Level;
-                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetJobLevelColor(item.Key, jobLevel ?? 0), item.Value.Item1, item.Value.Item2);
+                    int?  jobLevel   = profile.ClassJobLevels[item.Key].Value.Level;
+                    bool? jobIsMaxed = profile.ClassJobLevels[item.Key].Value.IsMaxed;
+
+                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetLevelColor(jobIsMaxed), item.Value.Item1, item.Value.Item2);
                 }
 
                 int? eurekaLevel = profile.ContentLevels.ElementalLevel;
-                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number, GetEurekaLevelColor(eurekaLevel ?? 0), EUREKA_X, EUREKA_Y);
+                bool? eurekaIsMaxed = (eurekaLevel == null) ? null : (eurekaLevel == EUREKA_MAXLVL);
+                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number, GetLevelColor(eurekaIsMaxed), EUREKA_X, EUREKA_Y);
             }
 
             return canvas;

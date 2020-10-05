@@ -13,69 +13,68 @@ namespace Botflox.Bot.Services
 {
     public class CharacterProfileGeneratorService
     {
-        internal const int CORNER_X = 684;
-        internal const int CORNER_Y = 658;
-        internal const int SPACING_X = 48;
-        internal const int SPACING_Y = 83;
-        internal const int EUREKA_X = CORNER_X + SPACING_X * 12;
-        internal const int EUREKA_Y = CORNER_Y;
-        internal const int EUREKA_MAXLVL = 60;
+        private const int CornerX        = 684;
+        private const int CornerY        = 658;
+        private const int SpacingX       = 48;
+        private const int SpacingY       = 83;
+        private const int EurekaX        = CornerX + SpacingX * 12;
+        private const int EurekaY        = CornerY;
+        private const int EurekaMaxLevel = 60;
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        internal Dictionary<int, Tuple<int, int>> coords = new Dictionary<int, Tuple<int, int>>() 
-        {
-            [33] = new (CORNER_X,                  CORNER_Y),
-            [24] = new (CORNER_X + SPACING_X,      CORNER_Y),
-            [28] = new (CORNER_X + SPACING_X * 2,  CORNER_Y),
-            [37] = new (CORNER_X + SPACING_X * 4,  CORNER_Y),
-            [32] = new (CORNER_X + SPACING_X * 5,  CORNER_Y),
-            [21] = new (CORNER_X + SPACING_X * 6,  CORNER_Y),
-            [19] = new (CORNER_X + SPACING_X * 7,  CORNER_Y),
-            [36] = new (CORNER_X + SPACING_X * 11, CORNER_Y),
+        private readonly Dictionary<int, Tuple<int, int>> _coords = new Dictionary<int, Tuple<int, int>>() {
+            [33] = Tuple.Create(CornerX, CornerY),
+            [24] = Tuple.Create(CornerX + SpacingX, CornerY),
+            [28] = Tuple.Create(CornerX + SpacingX * 2, CornerY),
+            [37] = Tuple.Create(CornerX + SpacingX * 4, CornerY),
+            [32] = Tuple.Create(CornerX + SpacingX * 5, CornerY),
+            [21] = Tuple.Create(CornerX + SpacingX * 6, CornerY),
+            [19] = Tuple.Create(CornerX + SpacingX * 7, CornerY),
+            [36] = Tuple.Create(CornerX + SpacingX * 11, CornerY),
 
-            [35] = new (CORNER_X,                  CORNER_Y + SPACING_Y),
-            [25] = new (CORNER_X + SPACING_X,      CORNER_Y + SPACING_Y),
-            [27] = new (CORNER_X + SPACING_X * 2,  CORNER_Y + SPACING_Y),
-            [23] = new (CORNER_X + SPACING_X * 4,  CORNER_Y + SPACING_Y),
-            [31] = new (CORNER_X + SPACING_X * 5,  CORNER_Y + SPACING_Y),
-            [38] = new (CORNER_X + SPACING_X * 6,  CORNER_Y + SPACING_Y),
-            [34] = new (CORNER_X + SPACING_X * 8,  CORNER_Y + SPACING_Y),
-            [30] = new (CORNER_X + SPACING_X * 9,  CORNER_Y + SPACING_Y),
-            [22] = new (CORNER_X + SPACING_X * 10, CORNER_Y + SPACING_Y),
-            [20] = new (CORNER_X + SPACING_X * 11, CORNER_Y + SPACING_Y),
+            [35] = Tuple.Create(CornerX, CornerY + SpacingY),
+            [25] = Tuple.Create(CornerX + SpacingX, CornerY + SpacingY),
+            [27] = Tuple.Create(CornerX + SpacingX * 2, CornerY + SpacingY),
+            [23] = Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY),
+            [31] = Tuple.Create(CornerX + SpacingX * 5, CornerY + SpacingY),
+            [38] = Tuple.Create(CornerX + SpacingX * 6, CornerY + SpacingY),
+            [34] = Tuple.Create(CornerX + SpacingX * 8, CornerY + SpacingY),
+            [30] = Tuple.Create(CornerX + SpacingX * 9, CornerY + SpacingY),
+            [22] = Tuple.Create(CornerX + SpacingX * 10, CornerY + SpacingY),
+            [20] = Tuple.Create(CornerX + SpacingX * 11, CornerY + SpacingY),
 
-            [14] = new (CORNER_X,                  CORNER_Y + SPACING_Y * 2),
-            [15] = new (CORNER_X + SPACING_X,      CORNER_Y + SPACING_Y * 2),
-            [13] = new (CORNER_X + SPACING_X * 2,  CORNER_Y + SPACING_Y * 2),
-            [12] = new (CORNER_X + SPACING_X * 3,  CORNER_Y + SPACING_Y * 2),
-            [ 8] = new (CORNER_X + SPACING_X * 4,  CORNER_Y + SPACING_Y * 2),
-            [11] = new (CORNER_X + SPACING_X * 5,  CORNER_Y + SPACING_Y * 2),
-            [10] = new (CORNER_X + SPACING_X * 6,  CORNER_Y + SPACING_Y * 2),
-            [ 9] = new (CORNER_X + SPACING_X * 7,  CORNER_Y + SPACING_Y * 2),
-            [17] = new (CORNER_X + SPACING_X * 9,  CORNER_Y + SPACING_Y * 2),
-            [16] = new (CORNER_X + SPACING_X * 10, CORNER_Y + SPACING_Y * 2),
-            [18] = new (CORNER_X + SPACING_X * 11, CORNER_Y + SPACING_Y * 2),
+            [14] = Tuple.Create(CornerX, CornerY + SpacingY * 2),
+            [15] = Tuple.Create(CornerX + SpacingX, CornerY + SpacingY * 2),
+            [13] = Tuple.Create(CornerX + SpacingX * 2, CornerY + SpacingY * 2),
+            [12] = Tuple.Create(CornerX + SpacingX * 3, CornerY + SpacingY * 2),
+            [8] = Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY * 2),
+            [11] = Tuple.Create(CornerX + SpacingX * 5, CornerY + SpacingY * 2),
+            [10] = Tuple.Create(CornerX + SpacingX * 6, CornerY + SpacingY * 2),
+            [9] = Tuple.Create(CornerX + SpacingX * 7, CornerY + SpacingY * 2),
+            [17] = Tuple.Create(CornerX + SpacingX * 9, CornerY + SpacingY * 2),
+            [16] = Tuple.Create(CornerX + SpacingX * 10, CornerY + SpacingY * 2),
+            [18] = Tuple.Create(CornerX + SpacingX * 11, CornerY + SpacingY * 2),
         };
 
-        internal SolidBrush bWhite = new SolidBrush(Color.White);
-        internal SolidBrush bOrange = new SolidBrush(Color.FromArgb(239, 134, 48));
-        internal SolidBrush bGray = new SolidBrush(Color.LightGray);
+        private readonly SolidBrush _bWhite  = new SolidBrush(Color.White);
+        private readonly SolidBrush _bOrange = new SolidBrush(Color.FromArgb(239, 134, 48));
+        private readonly SolidBrush _bGray   = new SolidBrush(Color.LightGray);
 
         public CharacterProfileGeneratorService(IHttpClientFactory httpClientFactory) {
             _httpClientFactory = httpClientFactory;
         }
 
         private Brush GetLevelColor(bool? isMaxed) {
-            return (isMaxed == null) ? bGray : ((bool) isMaxed ? bOrange : bWhite);
+            return isMaxed == null ? _bGray : (bool) isMaxed ? _bOrange : _bWhite;
         }
 
         public async ValueTask<Image> RenderCharacterProfile(CharacterProfile profile, FontUtils fontUtils) {
             FontFamily lato = await fontUtils.LoadFontResource("Botflox.Bot.Resources.Lato-Regular.ttf");
 
             Font big = new Font(lato, 48, FontStyle.Regular, GraphicsUnit.Pixel),
-              medium = new Font(lato, 30, FontStyle.Regular, GraphicsUnit.Pixel),
-              number = new Font(lato, 28, FontStyle.Regular, GraphicsUnit.Pixel);
+                medium = new Font(lato, 30, FontStyle.Regular, GraphicsUnit.Pixel),
+                number = new Font(lato, 28, FontStyle.Regular, GraphicsUnit.Pixel);
 
             HttpClient? client = _httpClientFactory.CreateClient("CharacterProfileGeneration");
             Image portrait, bg = await Task.Run(() => Resources.ProfileBg);
@@ -90,28 +89,31 @@ namespace Botflox.Bot.Services
                 graphics.DrawImage(bg, new Rectangle(640, 0, 670, 873));
                 graphics.DrawImage(portrait, new Rectangle(0, 0, 640, 873));
 
-                graphics.DrawStringCentered(profile.Name, big, bWhite, 974, profile.TitleTop ? 117 : 81);
-                graphics.DrawStringCentered($"<{profile.Title}>", medium, bWhite, 974, profile.TitleTop ? 67 : 124);
+                graphics.DrawStringCentered(profile.Name, big, _bWhite, 974, profile.TitleTop ? 117 : 81);
+                graphics.DrawStringCentered($"<{profile.Title}>", medium, _bWhite, 974, profile.TitleTop ? 67 : 124);
 
-                graphics.DrawStringCentered($"{profile.Server} [{profile.DataCenter}]", big, bWhite, 974, 224);
+                graphics.DrawStringCentered($"{profile.Server} [{profile.DataCenter}]", big, _bWhite, 974, 224);
 
-                graphics.DrawString($"{profile.Race}, {profile.Tribe}", medium, bWhite, 688, 298);
-                graphics.DrawString(profile.GuardianDeity, medium, bWhite, 688, 361);
-                graphics.DrawString(profile.GrandCompanyRank ?? "-", medium, bWhite, 688, 428);
+                graphics.DrawString($"{profile.Race}, {profile.Tribe}", medium, _bWhite, 688, 298);
+                graphics.DrawString(profile.GuardianDeity, medium, _bWhite, 688, 361);
+                graphics.DrawString(profile.GrandCompanyRank ?? "-", medium, _bWhite, 688, 428);
 
-                string fc = (profile.FreeCompanyName != null) ? $"{profile.FreeCompanyName} <{profile.FreeCompanyTag}>" : "-";
-                graphics.DrawString(fc, medium, bWhite, 688, 491);
+                string fc = profile.FreeCompanyName != null
+                    ? $"{profile.FreeCompanyName} <{profile.FreeCompanyTag}>"
+                    : "-";
+                graphics.DrawString(fc, medium, _bWhite, 688, 491);
 
-                foreach (var item in coords) {
-                    int?  jobLevel   = profile.ClassJobLevels[item.Key].Value.Level;
-                    bool? jobIsMaxed = profile.ClassJobLevels[item.Key].Value.IsMaxed;
+                foreach ((int jobId, (int x, int y)) in _coords) {
+                    int? jobLevel = profile.ClassJobLevels[jobId]?.Level;
+                    bool? jobIsMaxed = profile.ClassJobLevels[jobId]?.IsMaxed;
 
-                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetLevelColor(jobIsMaxed), item.Value.Item1, item.Value.Item2);
+                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetLevelColor(jobIsMaxed), x, y);
                 }
 
                 int? eurekaLevel = profile.ContentLevels.ElementalLevel;
-                bool? eurekaIsMaxed = (eurekaLevel == null) ? null : (eurekaLevel == EUREKA_MAXLVL);
-                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number, GetLevelColor(eurekaIsMaxed), EUREKA_X, EUREKA_Y);
+                bool? eurekaIsMaxed = eurekaLevel == null ? null : eurekaLevel == EurekaMaxLevel;
+                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number, GetLevelColor(eurekaIsMaxed),
+                    EurekaX, EurekaY);
             }
 
             return canvas;
@@ -122,7 +124,7 @@ namespace Botflox.Bot.Services
             await using MemoryStream memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream, cancellationToken);
             memoryStream.Seek(0, SeekOrigin.Begin);
-            
+
             return await Task.Run(() => Image.FromStream(memoryStream), cancellationToken);
         }
     }

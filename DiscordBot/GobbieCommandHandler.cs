@@ -24,7 +24,7 @@ namespace Botflox.Bot
         }
 
         public async Task InstallCommandsAsync() {
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
+            await _commands.AddModulesAsync(Assembly.GetExecutingAssembly(), _serviceProvider);
             _client.MessageReceived += HandleCommandAsync;
         }
 

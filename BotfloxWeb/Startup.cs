@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using AspNet.Security.OAuth.Discord;
 using Botflox.Bot;

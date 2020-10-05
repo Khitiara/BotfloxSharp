@@ -13,6 +13,9 @@ namespace Botflox.Bot.Services
 {
     public class CharacterProfileGeneratorService
     {
+        internal const int MAXLEVEL = 80; // up on 6.0 idk
+        internal const int MAXLEVEL_BLU = 60;
+        internal const int MAXLEVEL_EUREKA = 60;
         internal const int CORNER_X = 684;
         internal const int CORNER_Y = 658;
         internal const int SPACING_X = 48;
@@ -57,8 +60,26 @@ namespace Botflox.Bot.Services
             [18] = new (CORNER_X + SPACING_X * 11, CORNER_Y + SPACING_Y * 2),
         };
 
+        internal SolidBrush bWhite = new SolidBrush(Color.White);
+        internal SolidBrush bOrange = new SolidBrush(Color.FromArgb(239, 134, 48));
+        internal SolidBrush bGray = new SolidBrush(Color.LightGray);
+
         public CharacterProfileGeneratorService(IHttpClientFactory httpClientFactory) {
             _httpClientFactory = httpClientFactory;
+        }
+
+        private Brush GetJobLevelColor(int id, int level) {
+            IClassJob job = ClassJobs.ById[id];
+            int max = MAXLEVEL;
+
+            if (job is LimitedCombatJob) 
+                max = MAXLEVEL_BLU;
+
+            return (level == max) ? bOrange : ((level > 0) ? bWhite : bGray);
+        }
+
+        private Brush GetEurekaLevelColor(int level) {
+            return (level == MAXLEVEL_EUREKA) ? bOrange : ((level > 0) ? bWhite : bGray);
         }
 
         public async ValueTask<Image> RenderCharacterProfile(CharacterProfile profile) {
@@ -79,22 +100,22 @@ namespace Botflox.Bot.Services
                 graphics.DrawImage(bg, new Rectangle(640, 0, 670, 873));
                 graphics.DrawImage(portrait, new Rectangle(0, 0, 640, 873));
 
-                graphics.DrawStringCentered(profile.Name, nameFont, Brushes.White, 974, profile.TitleTop ? 117 : 81);
-                graphics.DrawStringCentered($"<{profile.Title}>", titleFont, Brushes.White, 974, profile.TitleTop ? 67 : 124);
+                graphics.DrawStringCentered(profile.Name, nameFont, bWhite, 974, profile.TitleTop ? 117 : 81);
+                graphics.DrawStringCentered($"<{profile.Title}>", titleFont, bWhite, 974, profile.TitleTop ? 67 : 124);
 
-                graphics.DrawStringCentered($"{profile.Server} [{profile.DataCenter}]", nameFont, Brushes.White, 974, 224);
-                graphics.DrawString($"{profile.Race}, {profile.Tribe}", titleFont, Brushes.White, 688, 327);
-                graphics.DrawString(profile.GuardianDeity, titleFont, Brushes.White, 688, 390);
-                graphics.DrawString(profile.GrandCompanyRank ?? "-", titleFont, Brushes.White, 688, 457);
-                graphics.DrawString(profile.FreeCompanyName ?? "-", titleFont, Brushes.White, 688, 520);
+                graphics.DrawStringCentered($"{profile.Server} [{profile.DataCenter}]", nameFont, bWhite, 974, 224);
+                graphics.DrawString($"{profile.Race}, {profile.Tribe}", titleFont, bWhite, 688, 298);
+                graphics.DrawString(profile.GuardianDeity, titleFont, bWhite, 688, 361);
+                graphics.DrawString(profile.GrandCompanyRank ?? "-", titleFont, bWhite, 688, 428);
+                graphics.DrawString(profile.FreeCompanyName ?? "-", titleFont, bWhite, 688, 491);
 
                 foreach (var item in coords) {
                     int? jobLevel = profile.ClassJobLevels[item.Key].Value.Level;
-                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", titleFont, Brushes.White, item.Value.Item1, item.Value.Item2);
+                    graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", titleFont, GetJobLevelColor(item.Key, jobLevel ?? 0), item.Value.Item1, item.Value.Item2);
                 }
 
                 int? eurekaLevel = profile.ContentLevels.ElementalLevel;
-                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", titleFont, Brushes.White, EUREKA_X, EUREKA_Y);
+                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", titleFont, GetEurekaLevelColor(eurekaLevel ?? 0), EUREKA_X, EUREKA_Y);
             }
 
             return canvas;
@@ -105,6 +126,7 @@ namespace Botflox.Bot.Services
             await using MemoryStream memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream, cancellationToken);
             memoryStream.Seek(0, SeekOrigin.Begin);
+            
             return await Task.Run(() => Image.FromStream(memoryStream), cancellationToken);
         }
     }

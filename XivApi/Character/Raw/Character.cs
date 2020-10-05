@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable 8618
+using System;
 using System.Collections.Generic;
 
 namespace XivApi.Character.Raw

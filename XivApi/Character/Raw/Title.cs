@@ -1,4 +1,5 @@
-﻿namespace XivApi.Character.Raw
+﻿#pragma warning disable 8618
+namespace XivApi.Character.Raw
 {
     public class Title
     {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#pragma warning disable 8618
+using System.Collections.Generic;
 
 namespace XivApi.Pagination
 {

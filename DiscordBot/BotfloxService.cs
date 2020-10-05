@@ -32,12 +32,11 @@ namespace Botflox.Bot
             _shardChecker.AllShardsReady += ShardCheckerOnAllShardsReadyAsync;
         }
 
-#pragma warning disable 1998
-        private async Task ShardCheckerOnAllShardsReadyAsync() {
+        private Task ShardCheckerOnAllShardsReadyAsync() {
             _logger.LogInformation($"Botflox Discord bot started with user @{_discord.CurrentUser}" +
                                    $"<{_discord.CurrentUser.Id}>");
+            return Task.CompletedTask;
         }
-#pragma warning restore 1998
 
         public void Dispose() {
             _discord.Dispose();
@@ -60,6 +59,5 @@ namespace Botflox.Bot
 
             await Task.WhenAny(StopImpl(), Task.Delay(Timeout.Infinite, cancellationToken));
         }
-
     }
 }

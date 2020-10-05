@@ -1,0 +1,44 @@
+﻿@page
+@using BotfloxWeb.Models
+@model BotfloxWeb.Pages.GuildsSettings
+@{
+    ViewData["Title"] = "Edit Guild Settings";
+}
+
+<h1>Botflox Settings for Your Owned Guilds</h1>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Guild Id</th>
+        <th>Guild Name</th>
+        <th>Command Prefix</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (GuildSettingsDetailModel item in Model.OwnedGuilds) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Settings.GuildId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GuildName)
+            </td>
+            <td>
+                <form class="form-inline" method="post">
+                    <input type="hidden" name="GuildId" value=@item.Settings.GuildId/>
+                    <label class="sr-only" for=@($"commandPrefix{item.Settings.GuildId}")>
+                        Command Prefix for @item.GuildName
+                    </label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <input type="text" class="form-control w-auto" value="@item.Settings.CommandPrefix"
+                               id=@($"commandPrefix{item.Settings.GuildId}") name="CommandPrefix" required/>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary mb-2">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

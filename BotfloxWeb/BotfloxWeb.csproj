@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+      <UserSecretsId>2cb131c6-12a7-40f5-b8fd-4e7acdbe935a</UserSecretsId>
+      <Nullable>enable</Nullable>
+      <LangVersion>9</LangVersion>
+  </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DiscordBot\DiscordBot.csproj" />
+      <ProjectReference Include="..\XivApi\XivApi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AspNet.Security.OAuth.Discord" Version="3.1.3" />
+      <PackageReference Include="Discord.Net" Version="2.2.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational.Design" Version="1.1.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.2" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Json.Microsoft" Version="3.2.2" />
+      <PackageReference Include="RestSharp" Version="106.11.7" />
+      <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="106.11.7" />
+      <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />
+      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\GuildsSettings\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GuildsSettings\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GuildsSettings\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GuildsSettings\Index.cshtml" />
+    </ItemGroup>
+
+</Project>

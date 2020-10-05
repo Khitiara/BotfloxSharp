@@ -29,7 +29,7 @@ namespace BotfloxWeb.Pages
         public IList<GuildSettingsDetailModel> OwnedGuilds { get; set; } = new List<GuildSettingsDetailModel>();
 
         public async Task OnGetAsync() {
-            if (!ulong.TryParse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value, out ulong userId)) {
+            if (!ulong.TryParse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out ulong userId)) {
                 throw new AuthenticationException("Unexpected discord api reply item type");
             }
 
@@ -44,7 +44,7 @@ namespace BotfloxWeb.Pages
         }
 
         public async Task OnPostAsync() {
-            if (!ulong.TryParse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value, out ulong userId)) {
+            if (!ulong.TryParse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out ulong userId)) {
                 throw new AuthenticationException("Unexpected discord api reply item type");
             }
 

@@ -16,7 +16,7 @@ namespace BotfloxWeb.Pages
             _botflox = botflox;
         }
 
-        public Uri InviteUri { get; set; }
+        public Uri InviteUri { get; set; } = null!;
 
         public async Task OnGetAsync() {
             InviteUri = await _botflox.GetInviteUriAsync();

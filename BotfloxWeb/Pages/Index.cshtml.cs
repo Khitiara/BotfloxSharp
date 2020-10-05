@@ -9,7 +9,7 @@ namespace BotfloxWeb.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly BotfloxBot      _botflox;
+        private readonly BotfloxBot          _botflox;
 
         public IndexModel(ILogger<IndexModel> logger, BotfloxBot botflox) {
             _logger = logger;

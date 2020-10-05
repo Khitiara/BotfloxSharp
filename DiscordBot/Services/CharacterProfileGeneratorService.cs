@@ -22,6 +22,7 @@ namespace Botflox.Bot.Services
         private const int EurekaMaxLevel = 60;
 
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly FontUtils          _fontUtils;
 
         private readonly Dictionary<int, Tuple<int, int>> _coords = new Dictionary<int, Tuple<int, int>>() {
             [33] = Tuple.Create(CornerX, CornerY),
@@ -61,16 +62,17 @@ namespace Botflox.Bot.Services
         private readonly SolidBrush _bOrange = new SolidBrush(Color.FromArgb(239, 134, 48));
         private readonly SolidBrush _bGray   = new SolidBrush(Color.LightGray);
 
-        public CharacterProfileGeneratorService(IHttpClientFactory httpClientFactory) {
+        public CharacterProfileGeneratorService(IHttpClientFactory httpClientFactory, FontUtils fontUtils) {
             _httpClientFactory = httpClientFactory;
+            _fontUtils = fontUtils;
         }
 
         private Brush GetLevelColor(bool? isMaxed) {
             return isMaxed == null ? _bGray : (bool) isMaxed ? _bOrange : _bWhite;
         }
 
-        public async ValueTask<Image> RenderCharacterProfile(CharacterProfile profile, FontUtils fontUtils) {
-            FontFamily lato = await fontUtils.LoadFontResource("Botflox.Bot.Resources.Lato-Regular.ttf");
+        public async ValueTask<Image> RenderCharacterProfileAsync(CharacterProfile profile) {
+            FontFamily lato = await _fontUtils.LoadFontResource("Botflox.Bot.Resources.Lato-Regular.ttf");
 
             Font big = new Font(lato, 48, FontStyle.Regular, GraphicsUnit.Pixel),
                 medium = new Font(lato, 30, FontStyle.Regular, GraphicsUnit.Pixel),

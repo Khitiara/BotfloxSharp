@@ -1,5 +1,6 @@
 using System;
 using Botflox.Bot.Data;
+using Botflox.Bot.Modules;
 using Botflox.Bot.Services;
 using Botflox.Bot.Utils;
 using Discord;
@@ -58,6 +59,7 @@ namespace Botflox.Bot
                 .AddSingleton<CharacterProfileGeneratorService>()
                 .AddSingleton<FontUtils>()
                 .AddSingleton<BotfloxBot>()
+                .AddSingleton<IModuleCollection, MainModuleCollection>()
                 .AddSingleton(x => {
                     CommandService commandService = new CommandService(new CommandServiceConfig {
                         CaseSensitiveCommands = false,

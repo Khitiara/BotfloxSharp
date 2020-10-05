@@ -110,7 +110,9 @@ namespace Botflox.Bot.Services
                 graphics.DrawString($"{profile.Race}, {profile.Tribe}", medium, bWhite, 688, 298);
                 graphics.DrawString(profile.GuardianDeity, medium, bWhite, 688, 361);
                 graphics.DrawString(profile.GrandCompanyRank ?? "-", medium, bWhite, 688, 428);
-                graphics.DrawString(profile.FreeCompanyName ?? "-", medium, bWhite, 688, 491);
+
+                string fc = (profile.FreeCompanyName != null) ? $"{profile.FreeCompanyName} <{profile.FreeCompanyTag}>" : "-";
+                graphics.DrawString(fc, medium, bWhite, 688, 491);
 
                 foreach (var item in coords) {
                     int? jobLevel = profile.ClassJobLevels[item.Key].Value.Level;

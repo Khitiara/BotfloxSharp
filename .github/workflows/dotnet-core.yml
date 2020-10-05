@@ -23,3 +23,9 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+    - name: Publish
+      run: dotnet publish BotfloxWeb -c release --no-restore
+    - uses: actions/upload-artifact@v2
+      with:
+        name: WebAppPublish
+        path: BotfloxWeb/bin/Release/net5.0/publish/

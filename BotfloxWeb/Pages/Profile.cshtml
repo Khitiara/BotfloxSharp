@@ -1,0 +1,11 @@
+﻿@page
+@model BotfloxWeb.Pages.Profile
+
+@{
+    ViewData["Title"] = $"Profile for {Model.CharProfile.Name}";
+}
+
+<div class="text-center w-75 m-auto">
+    <img src="~/profile-image/@(Model.CharProfile.LodestoneId).png" alt="Character profile card for @(Model.CharProfile.Name)"
+         class="img-fluid rounded">
+</div>

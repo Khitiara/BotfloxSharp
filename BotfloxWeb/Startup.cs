@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Threading.Tasks;
 using AspNet.Security.OAuth.Discord;
 using Botflox.Bot;
@@ -44,6 +45,7 @@ namespace BotfloxWeb
             services.AddAuthorization(options => {
                 // Policies here
             });
+            services.AddResponseCaching();
             services.Configure<ForwardedHeadersOptions>(options => {
                 options.ForwardedHeaders =
                     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -68,6 +70,8 @@ namespace BotfloxWeb
 
             app.UseRouting();
 
+            app.UseResponseCaching();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -81,7 +85,7 @@ namespace BotfloxWeb
                     context.Response.Redirect((await bot.GetInviteUriAsync()).ToString());
                     await context.Response.CompleteAsync();
                 });
-                endpoints.MapGet("/profile/by-lodestone/{id}", async context => {
+                endpoints.MapGet("/profile-image/{id}.png", async context => {
                     IServiceProvider sp = context.RequestServices;
                     HttpResponse response = context.Response;
                     if (!ulong.TryParse(context.Request.RouteValues["id"] as string, out ulong lodestoneId)) {
@@ -98,7 +102,16 @@ namespace BotfloxWeb
                         await xivApiClient.CharacterProfileAsync(lodestoneId, context.RequestAborted);
                     Image profileImage = await profileGeneratorService.RenderCharacterProfileAsync(profile);
                     response.ContentType = "image/png";
-                    await Task.Run(() => profileImage.Save(response.Body, ImageFormat.Png), context.RequestAborted);
+                    await using MemoryStream memoryStream = new MemoryStream();
+                    await Task.Run(() => profileImage.Save(memoryStream, ImageFormat.Png), context.RequestAborted);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    response.ContentLength = memoryStream.Length;
+                    response.GetTypedHeaders().CacheControl =
+                        new Microsoft.Net.Http.Headers.CacheControlHeaderValue {
+                            Public = true,
+                            MaxAge = TimeSpan.FromHours(12)
+                        };
+                    await memoryStream.CopyToAsync(response.Body);
                 });
                 endpoints.MapRazorPages();
             });

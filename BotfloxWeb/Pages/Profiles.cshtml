@@ -1,0 +1,25 @@
+﻿@page
+@model BotfloxWeb.Pages.Profiles
+
+@{
+    ViewData["Title"] = "Profile Cards";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Character Profile Card Generator</h1>
+    <p>Botflox can generate character profile cards for any ffxiv character based on their lodestone profile - 
+        enter the desired character's lodestone id (the number at the end of their lodestone profile url) into
+        the box below to get a preview.</p>
+</div>
+
+<form method="post" class="form-inline">
+    <div class="form-group">
+        <input asp-for="LodestoneId" placeholder="Character Lodestone Id"/>
+        <span asp-validation-for="LodestoneId"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Load Profile</button>
+</form>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

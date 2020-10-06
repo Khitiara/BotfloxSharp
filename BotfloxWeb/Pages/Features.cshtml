@@ -1,0 +1,41 @@
+﻿@page
+@model BotfloxWeb.Pages.Features
+
+@{
+    ViewData["Title"] = "Features";
+}
+
+<div class="text-left">
+    <h1 class="display-4">Features</h1>
+    <p>A number of features are available from the discord bot and the website.</p>
+</div>
+<div class="container px-0">
+    <div class="row">
+        <div class="col-2 pl-0 text-right">
+            <div id="menu" class="sticky-top list-group">
+                <a class="list-group-item list-group-item-action" href="#chara-linking">Link Your Character</a>
+                <a class="list-group-item list-group-item-action" href="#profile-cards">Character Profile Cards</a>
+            </div>
+        </div>
+        <div class="col-10 px-0" data-spy="scroll" data-target="#menu" data-offset="0">
+            <div class="card bg-dark" id="chara-linking">
+                <div class="card-body row">
+                    <h5 class="card-title text-orange">Link Your Character</h5>
+                    <p class="small text-white">Link your character to your discord account, using your lodestone
+                        profile bio to verify and prevent others from claiming your character. Using this feature,
+                        you can look up the linked character of other discord users or use shorthand versions of many
+                        commands that default to using your linked character.</p>
+                </div>
+            </div>
+            <div class="card bg-dark" id="profile-cards">
+                <div class="card-body row">
+                    <h5 class="card-title text-orange">Character Profile Cards</h5>
+                    <p class="small text-white">Render beautiful character cards for any xiv character, showing
+                        a character's name, title, what jobs they've leveled, what Free Company they're in, e.t.c.</p>
+                    <p class="small text-white">An <a asp-page="/Profiles">online character profile card generator</a>
+                        is available for previewing the generated cards.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

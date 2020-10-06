@@ -5,6 +5,7 @@
   &lt;Assembly Path="C:\Users\robot\.nuget\packages\discord.net.websocket\2.2.0\lib\netstandard2.1\Discord.Net.WebSocket.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\robot\.nuget\packages\microsoft.aspnetcore.app.ref\3.1.2\ref\netcoreapp3.1\Microsoft.AspNetCore.Mvc.RazorPages.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.7\System.Private.CoreLib.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\5.0.0-rc.1.20451.14\ref\net5.0\System.ComponentModel.Annotations.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=DiscordBot_002FResources/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=XivApi_002FResources/@EntryIndexedValue">True</s:Boolean>

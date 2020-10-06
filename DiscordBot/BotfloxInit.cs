@@ -55,6 +55,7 @@ namespace Botflox.Bot
                     client.Log += logger.LogDiscord;
                     return client;
                 })
+                .AddMemoryCache()
                 .AddSingleton<Random>()
                 .AddHttpClient()
                 .AddSingleton<CharacterProfileGeneratorService>()

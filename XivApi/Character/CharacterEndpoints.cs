@@ -29,7 +29,7 @@ namespace XivApi.Character
         public static async Task<CharacterProfile> CharacterProfileAsync(this XivApiClient client, ulong id,
             CancellationToken cancellationToken = default) {
             CharacterResponse response =
-                await client.ApiGetAsync<CharacterResponse>(CharacterByIdRequest(id), cancellationToken);
+                await client.ApiGetAsync<CharacterResponse>(CharacterByIdRequest(id), id.ToString(), cancellationToken);
             return await Task.Run(() => ProcessCharacterProfile(response), cancellationToken);
         }
 
@@ -41,7 +41,8 @@ namespace XivApi.Character
                 return dcserver != null ? req.AddQueryParameter("server", dcserver) : req;
             }
 
-            return client.GetPaginatedAsync<CharacterSearchResult>(BuildSearch, cancellationToken);
+            return client.GetPaginatedAsync<CharacterSearchResult>(BuildSearch, $"search:{name}:{dcserver}",
+                cancellationToken);
         }
 
         public static async ValueTask<CharacterProfile> FindSingleCharacterAsync(this XivApiClient client, string name,

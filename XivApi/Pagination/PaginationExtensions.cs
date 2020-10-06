@@ -10,14 +10,15 @@ namespace XivApi.Pagination
     public static class PaginationExtensions
     {
         public static async IAsyncEnumerable<T> GetPaginatedAsync<T>(this XivApiClient apiClient,
-            Func<IRestRequest> baseRequestBuilder,
+            Func<IRestRequest> baseRequestBuilder, string? cacheKey = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default) {
             bool lastPage = false;
             for (int page = 0; !lastPage; page++) {
                 IRestRequest request = baseRequestBuilder();
                 request.AddQueryParameter("page", page.ToString());
+                string? pageKey = cacheKey != null ? $"paged:{cacheKey}:{page}" : null;
                 PaginatedResponse<T> response =
-                    await apiClient.ApiGetAsync<PaginatedResponse<T>>(request, cancellationToken);
+                    await apiClient.ApiGetAsync<PaginatedResponse<T>>(request, pageKey, cancellationToken);
                 if (response.Pagination.PageNext == null) {
                     lastPage = true;
                 }

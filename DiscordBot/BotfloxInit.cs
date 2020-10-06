@@ -8,6 +8,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -71,7 +72,8 @@ namespace Botflox.Bot
                     commandService.Log += x.GetRequiredService<ILogger<CommandService>>().LogDiscord;
                     return commandService;
                 })
-                .AddSingleton(x => new XivApiClient(x.GetRequiredService<IConfiguration>()["XivApiKey"]))
+                .AddSingleton(sp => new XivApiClient(sp.GetRequiredService<IConfiguration>()["XivApiKey"],
+                    sp.GetService<IMemoryCache>()))
                 .AddSingleton<GobbieCommandHandler>()
                 .AddHostedService<BotfloxService>();
         }

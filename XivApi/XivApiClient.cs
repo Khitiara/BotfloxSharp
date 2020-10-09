@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using RestSharp;
 using RestSharp.Authenticators;
+using RestSharp.Serialization.Xml;
+using RestSharp.Serializers.SystemTextJson;
 
 namespace XivApi
 {
@@ -32,6 +37,9 @@ namespace XivApi
                 ThrowOnDeserializationError = true, // Probably redundant but being safe here
                 ThrowOnAnyError = true
             };
+            JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
+            serializerOptions.Converters.Add(new JsonStringEnumConverter());
+            _restClient.UseSystemTextJson(serializerOptions);
         }
 
         public Task<T> ApiGetAsync<T>(IRestRequest request, string? cacheKey = null,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
@@ -17,6 +18,8 @@ namespace Botflox.Bot.Services
         private const int CornerY        = 658;
         private const int SpacingX       = 48;
         private const int SpacingY       = 83;
+        private const int IconOffsetX    = -23;
+        private const int IconOffsetY    = -72;
         private const int EurekaX        = CornerX + SpacingX * 12;
         private const int EurekaY        = CornerY;
         private const int EurekaMaxLevel = 60;
@@ -49,10 +52,10 @@ namespace Botflox.Bot.Services
             [15] = Tuple.Create(CornerX + SpacingX, CornerY + SpacingY * 2),
             [13] = Tuple.Create(CornerX + SpacingX * 2, CornerY + SpacingY * 2),
             [12] = Tuple.Create(CornerX + SpacingX * 3, CornerY + SpacingY * 2),
-            [8] = Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY * 2),
+            [8]  = Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY * 2),
             [11] = Tuple.Create(CornerX + SpacingX * 5, CornerY + SpacingY * 2),
             [10] = Tuple.Create(CornerX + SpacingX * 6, CornerY + SpacingY * 2),
-            [9] = Tuple.Create(CornerX + SpacingX * 7, CornerY + SpacingY * 2),
+            [9]  = Tuple.Create(CornerX + SpacingX * 7, CornerY + SpacingY * 2),
             [17] = Tuple.Create(CornerX + SpacingX * 9, CornerY + SpacingY * 2),
             [16] = Tuple.Create(CornerX + SpacingX * 10, CornerY + SpacingY * 2),
             [18] = Tuple.Create(CornerX + SpacingX * 11, CornerY + SpacingY * 2),
@@ -88,6 +91,8 @@ namespace Botflox.Bot.Services
 
             using (Graphics graphics = Graphics.FromImage(canvas)) {
                 graphics.Clear(Color.White);
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
                 graphics.DrawImage(bg, new Rectangle(640, 0, 670, 873));
                 graphics.DrawImage(portrait, new Rectangle(0, 0, 640, 873));
 
@@ -110,6 +115,7 @@ namespace Botflox.Bot.Services
                     bool? jobIsMaxed = profile.ClassJobLevels[jobId]?.IsMaxed;
 
                     graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetLevelColor(jobIsMaxed), x, y);
+                    graphics.DrawImage(ClassJobs.ById[jobId]?.Icon, new Rectangle(x + IconOffsetX, y + IconOffsetY, 46, 46));
                 }
 
                 int? eurekaLevel = profile.ContentLevels.ElementalLevel;

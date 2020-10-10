@@ -110,9 +110,13 @@ namespace Botflox.Bot.Services
                     : "-";
                 graphics.DrawString(fc, medium, _bWhite, 688, 491);
 
-                foreach ((int jobId, (int x, int y)) in _coords) {
+                foreach ((int id, (int x, int y)) in _coords) {
+                    int jobId = id;
                     int? jobLevel = profile.ClassJobLevels[jobId]?.Level;
                     bool? jobIsMaxed = profile.ClassJobLevels[jobId]?.IsMaxed;
+
+                    if ((profile.ClassJobLevels[jobId]?.ClassJob is CombatClass))
+                        jobId = (int) profile.ClassJobLevels[jobId]?.ClassJob.Id;
 
                     graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetLevelColor(jobIsMaxed), x, y);
                     graphics.DrawImage(ClassJobs.ById[jobId]?.Icon, new Rectangle(x + IconOffsetX, y + IconOffsetY, 46, 46));

@@ -38,7 +38,7 @@ namespace XivApi.Character
                 if (classJob is HandClass)
                     specialist = info.IsSpecialised;
                 bool? isMaxed = null;
-                isMaxed = (bool?) (info.ExpLevelTogo == 0);
+                isMaxed = (bool?) (info.ExpLevelTogo == 0 && info.Level != 0);
                 _jobLevels.Add(new ClassJobLevel(classJob, lvl, specialist, isMaxed));
             }
         }

@@ -27,7 +27,7 @@ namespace Botflox.Bot.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly FontUtils          _fontUtils;
 
-        private readonly Dictionary<int, Tuple<int, int>> _coords = new Dictionary<int, Tuple<int, int>>() {
+        private readonly Dictionary<int, Tuple<int, int>> _coords = new Dictionary<int, Tuple<int, int>> {
             [33] = Tuple.Create(CornerX, CornerY),
             [24] = Tuple.Create(CornerX + SpacingX, CornerY),
             [28] = Tuple.Create(CornerX + SpacingX * 2, CornerY),
@@ -52,7 +52,7 @@ namespace Botflox.Bot.Services
             [15] = Tuple.Create(CornerX + SpacingX, CornerY + SpacingY * 2),
             [13] = Tuple.Create(CornerX + SpacingX * 2, CornerY + SpacingY * 2),
             [12] = Tuple.Create(CornerX + SpacingX * 3, CornerY + SpacingY * 2),
-            [8]  = Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY * 2),
+            [8]  =  Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY * 2),
             [11] = Tuple.Create(CornerX + SpacingX * 5, CornerY + SpacingY * 2),
             [10] = Tuple.Create(CornerX + SpacingX * 6, CornerY + SpacingY * 2),
             [9]  = Tuple.Create(CornerX + SpacingX * 7, CornerY + SpacingY * 2),
@@ -111,15 +111,13 @@ namespace Botflox.Bot.Services
                 graphics.DrawString(fc, medium, _bWhite, 688, 491);
 
                 foreach ((int id, (int x, int y)) in _coords) {
-                    int jobId = id;
-                    int? jobLevel = profile.ClassJobLevels[jobId]?.Level;
-                    bool? jobIsMaxed = profile.ClassJobLevels[jobId]?.IsMaxed;
-
-                    if ((profile.ClassJobLevels[jobId]?.ClassJob is CombatClass))
-                        jobId = (int) profile.ClassJobLevels[jobId]?.ClassJob.Id;
+                    CharacterClassJobs.ClassJobLevel?
+                        level = profile.ClassJobLevels[id];
+                    int? jobLevel = level?.Level;
+                    bool? jobIsMaxed = level?.IsMaxed;
 
                     graphics.DrawStringCentered(jobLevel?.ToString() ?? "-", number, GetLevelColor(jobIsMaxed), x, y);
-                    graphics.DrawImage(ClassJobs.ById[jobId]?.Icon, new Rectangle(x + IconOffsetX, y + IconOffsetY, 46, 46));
+                    graphics.DrawImage(level?.ClassJob.Icon, new Rectangle(x + IconOffsetX, y + IconOffsetY, 46, 46));
                 }
 
                 int? eurekaLevel = profile.ContentLevels.ElementalLevel;

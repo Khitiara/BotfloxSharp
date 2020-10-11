@@ -12,21 +12,23 @@ namespace Botflox.Bot.Utils
     {
         public class Token : IAsyncDisposable, IDisposable
         {
-            private readonly ReactionAwaiter                      _awaiter;
-            private readonly ulong                                _msgId;
-            private readonly Channel<SocketReaction>              _channel;
-            private readonly CancellationToken                    _cancellationToken;
+            private readonly ReactionAwaiter                               _awaiter;
+            private readonly ulong                                         _msgId;
+            private readonly WeakReference<ChannelWriter<SocketReaction>>  _channelWriter;
+            private readonly CancellationToken                             _cancellationToken;
 
-            public Token(ReactionAwaiter awaiter, ulong msgId, Channel<SocketReaction> channel, 
-                CancellationToken cancellationToken) {
+            public Token(ReactionAwaiter awaiter, ulong msgId, 
+                ChannelWriter<SocketReaction> channelWriter, CancellationToken cancellationToken) {
                 _awaiter = awaiter;
                 _msgId = msgId;
-                _channel = channel;
+                _channelWriter = new WeakReference<ChannelWriter<SocketReaction>>(channelWriter);
                 _cancellationToken = cancellationToken;
             }
 
             public async void Post(SocketReaction reaction) {
-                await _channel.Writer.WriteAsync(reaction, _cancellationToken);
+                ChannelWriter<SocketReaction> writer;
+                if (_channelWriter.TryGetTarget(out writer))
+                    await writer.WriteAsync(reaction, _cancellationToken);
             }
 
             public async ValueTask DisposeAsync() {

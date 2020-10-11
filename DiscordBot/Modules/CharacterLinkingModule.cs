@@ -44,14 +44,11 @@ namespace Botflox.Bot.Modules
                 await using ReactionAwaiter.Token token = 
                     _reactionAwaiter.WaitForReaction(confirm, reactionChannel, cts.Token);
 
-                SocketReaction reaction;
-                while (await reactionChannel.Reader.WaitToReadAsync(cts.Token)) {
-                    reaction = await reactionChannel.Reader.ReadAsync();
-
+                await foreach (SocketReaction reaction in reactionChannel.Reader.ReadAllAsync(cts.Token)) {
                     if (reaction == null) continue;
 
                     if (reaction.UserId != Context.User.Id) {
-                        await ReplyAsync("Only the user executing the command may confirm a character setting");
+                        await ReplyAsync("Only the user executing the command may confirm a character setting.");
                         return;
                     }
 
@@ -89,7 +86,7 @@ namespace Botflox.Bot.Modules
                             if (stolen)
                                 message.Append(" as you have just done to another");
 
-                            message.Append($", add `botflox:{Context.User.Id}` to your lodestone profile and then run the" +
+                            message.Append($", add `botflox:{Context.User.Id}` to your Lodestone profile and then run the" +
                                             $" `{prefix}verify-character` command.");
 
                             await confirm.DeleteAsync();
@@ -99,7 +96,7 @@ namespace Botflox.Bot.Modules
                         case "\u274E":
                             reacted = true;
                             await confirm.DeleteAsync();
-                            await ReplyAsync("Try again with a corrected lodestone id");
+                            await ReplyAsync("Try again with a corrected Lodestone ID.");
                             break;
                     }
                 }
@@ -109,7 +106,7 @@ namespace Botflox.Bot.Modules
                 
                 if (!reacted) {
                     await confirm.DeleteAsync();
-                    await ReplyAsync("Confirmation timed out, try again.");
+                    await ReplyAsync("Confirmation timed out, please try again.");
                 }
             }
         }

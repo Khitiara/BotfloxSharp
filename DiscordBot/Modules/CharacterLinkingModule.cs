@@ -78,7 +78,7 @@ namespace Botflox.Bot.Modules
                         if (stolen)
                             message.Append(" as you have just done to another");
                         message.Append($", add `botflox:{Context.User.Id}` to your lodestone profile and then run the" +
-                                       $" `{prefix}verify` command.");
+                                       $" `{prefix}verify-character` command.");
                         await ReplyAsync(message.ToString());
                         break;
                     }

@@ -22,7 +22,6 @@ namespace Botflox.Bot.Services
         private const int IconOffsetY    = -72;
         private const int EurekaX        = CornerX + SpacingX * 12;
         private const int EurekaY        = CornerY;
-        private const int EurekaMaxLevel = 60;
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly FontUtils          _fontUtils;
@@ -52,10 +51,10 @@ namespace Botflox.Bot.Services
             [15] = Tuple.Create(CornerX + SpacingX, CornerY + SpacingY * 2),
             [13] = Tuple.Create(CornerX + SpacingX * 2, CornerY + SpacingY * 2),
             [12] = Tuple.Create(CornerX + SpacingX * 3, CornerY + SpacingY * 2),
-            [8]  =  Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY * 2),
+            [8] = Tuple.Create(CornerX + SpacingX * 4, CornerY + SpacingY * 2),
             [11] = Tuple.Create(CornerX + SpacingX * 5, CornerY + SpacingY * 2),
             [10] = Tuple.Create(CornerX + SpacingX * 6, CornerY + SpacingY * 2),
-            [9]  = Tuple.Create(CornerX + SpacingX * 7, CornerY + SpacingY * 2),
+            [9] = Tuple.Create(CornerX + SpacingX * 7, CornerY + SpacingY * 2),
             [17] = Tuple.Create(CornerX + SpacingX * 9, CornerY + SpacingY * 2),
             [16] = Tuple.Create(CornerX + SpacingX * 10, CornerY + SpacingY * 2),
             [18] = Tuple.Create(CornerX + SpacingX * 11, CornerY + SpacingY * 2),
@@ -121,8 +120,8 @@ namespace Botflox.Bot.Services
                 }
 
                 int? eurekaLevel = profile.ContentLevels.ElementalLevel;
-                bool? eurekaIsMaxed = eurekaLevel == null ? null : eurekaLevel == EurekaMaxLevel;
-                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number, GetLevelColor(eurekaIsMaxed),
+                graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number,
+                    GetLevelColor(profile.ContentLevels.EurekaCapped),
                     EurekaX, EurekaY);
             }
 

@@ -46,7 +46,7 @@ namespace Botflox.Bot.Modules
                 }
 
                 CharacterProfile profile = await _apiClient.CharacterProfileAsync(userSettings.MainCharacter);
-                if (profile.Bio.Contains($"botflox:{userId}")) {
+                if (profile.Bio.ToLowerInvariant().Contains($"botflox:{userId}")) {
                     userSettings.VerifiedCharacter = true;
                     _database.Update(userSettings);
                     await _database.SaveChangesAsync();

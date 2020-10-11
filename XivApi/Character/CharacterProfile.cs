@@ -7,12 +7,15 @@ namespace XivApi.Character
     {
         public struct ContentLevelInfo
         {
-            public ContentLevelInfo(int? elementalLevel) {
+            public ContentLevelInfo(int? elementalLevel, bool eurekaCapped) {
+                EurekaCapped = eurekaCapped;
                 ElementalLevel = elementalLevel > 0 ? elementalLevel : null;
                 ResistanceRank = null;
             }
 
             public int? ElementalLevel { get; }
+
+            public bool EurekaCapped { get; }
             public int? ResistanceRank { get; }
         }
 
@@ -58,7 +61,8 @@ namespace XivApi.Character
             Portrait = character.Portrait;
 
             ClassJobLevels = new CharacterClassJobs(character.ClassJobs);
-            ContentLevels = new ContentLevelInfo(character.ClassJobsElemental.Level);
+            ContentLevels = new ContentLevelInfo(character.ClassJobsElemental.Level,
+                character.ClassJobsElemental.ExpLevelMax > 0 && character.ClassJobsElemental.Level > 0);
 
             DataCenter = character.DC;
             Server = character.Server;

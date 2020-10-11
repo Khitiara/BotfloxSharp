@@ -53,7 +53,7 @@ namespace Botflox.Bot.Modules
                     await ReplyAsync($"Successfully verified {Context.User.Mention} as {profile.Name}, you can " +
                                      $"now safely remove `botflox:{userId}` from your lodestone profile.");
                 } else {
-                    await ReplyAsync($"Could not find a valid verification key in the lodestone profile of " +
+                    await ReplyAsync("Could not find a valid verification key in the lodestone profile of " +
                                      $"{profile.Name}, ensure `botflox:{userId}` is present in your lodestone profile " +
                                      "and try again. Note that changes to your lodestone profile may take time to " +
                                      "propagate, but that taking more than a minute or two is rare.");

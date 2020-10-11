@@ -11,6 +11,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using XivApi;
 using XivApi.Character;
+using Microsoft.EntityFrameworkCore;
 
 namespace Botflox.Bot.Modules
 {
@@ -20,6 +21,7 @@ namespace Botflox.Bot.Modules
         private readonly BotfloxDatabase _database;
         private readonly ReactionAwaiter _reactionAwaiter;
 
+        // ReSharper disable once SuggestBaseTypeForParameter
         public CharacterLinkingModule(XivApiClient apiClient, BotfloxDatabase database, DiscordShardedClient client) {
             _apiClient = apiClient;
             _database = database;
@@ -30,7 +32,7 @@ namespace Botflox.Bot.Modules
             // Are we in a guild or a dm?
             if (!(Context.Channel is SocketTextChannel guildChan)) return "?";
             ulong guildId = guildChan.Guild.Id;
-            GuildSettings guildSettings = await _database.GuildsSettings
+            GuildSettings guildSettings = await ((IQueryable<GuildSettings>) _database.GuildsSettings)
                 .SingleAsync(s => s.GuildId == guildId, cancellationToken);
             return guildSettings.CommandPrefix;
         }
@@ -39,16 +41,15 @@ namespace Botflox.Bot.Modules
             CharacterProfile profile) {
             bool reacted = false;
             try {
-                Channel<SocketReaction> reactionChannel = Channel.CreateUnbounded<SocketReaction>();
                 CancellationTokenSource cts = new CancellationTokenSource(10000);
-                await using ReactionAwaiter.Token token = 
-                    _reactionAwaiter.WaitForReaction(confirm, reactionChannel, cts.Token);
-
-                await foreach (SocketReaction reaction in reactionChannel.Reader.ReadAllAsync(cts.Token)) {
+                using ReactionAwaiter.Token token = _reactionAwaiter.WaitForReaction(confirm,
+                    out ChannelReader<SocketReaction> reactionChannel, cts.Token);
+                await foreach (SocketReaction reaction in reactionChannel.ReadAllAsync(cts.Token)) {
                     if (reaction == null) continue;
 
                     if (reaction.UserId != Context.User.Id) {
-                        await ReplyAsync("Only the user executing the command may confirm a character setting.");
+                        await ReplyAsync("Only the user executing the command may confirm a character setting, " +
+                                         MentionUtils.MentionUser(reaction.UserId));
                         return;
                     }
 
@@ -59,10 +60,10 @@ namespace Botflox.Bot.Modules
                             reacted = true;
                             UserSettings? userSettings;
                             bool stolen = false;
-                            if ((userSettings = await _database.UsersSettings.FirstOrDefaultAsync(s =>
-                                s.MainCharacter == lodestoneId &&
-                                !s.VerifiedCharacter, cts.Token)) != null) {
-                                userSettings.VerifiedCharacter = false;
+                            if ((userSettings = await ((IQueryable<UserSettings>) _database.UsersSettings)
+                                .FirstOrDefaultAsync(s => s.MainCharacter == lodestoneId &&
+                                                          !s.VerifiedCharacter, cts.Token)) != null) {
+                                _database.Remove(userSettings);
                                 stolen = true;
                             }
 
@@ -80,35 +81,59 @@ namespace Botflox.Bot.Modules
 
                             string prefix = await GetPrefixAsync(cts.Token);
                             StringBuilder message = new StringBuilder(
-                                $"You will now be known as {profile.Name} of {profile.Server}." +
-                                "To prevent another user from associating with that character");
+                                $"You will now be known as {profile.Name} of {profile.Server}. " +
+                                "To prevent another user from associating with that character,");
 
                             if (stolen)
-                                message.Append(" as you have just done to another");
+                                message.Append(" as you have just done to another,");
 
-                            message.Append($", add `botflox:{Context.User.Id}` to your Lodestone profile and then run the" +
-                                            $" `{prefix}verify-character` command.");
+                            message.Append(
+                                $" add `botflox:{Context.User.Id}` to your Lodestone profile and then run the" +
+                                $" `{prefix}verify-character` command.");
 
                             await confirm.DeleteAsync();
                             await ReplyAsync(message.ToString());
-                            break;
+                            return;
                         }
                         case "\u274E":
                             reacted = true;
                             await confirm.DeleteAsync();
                             await ReplyAsync("Try again with a corrected Lodestone ID.");
-                            break;
+                            return;
                     }
                 }
             }
             finally {
                 _reactionAwaiter.Dispose();
-                
+
                 if (!reacted) {
                     await confirm.DeleteAsync();
                     await ReplyAsync("Confirmation timed out, please try again.");
                 }
             }
+        }
+
+        private async Task<bool> CheckConflict(ulong lodestoneId, CharacterProfile profile) {
+            UserSettings? settings = await ((IQueryable<UserSettings>) _database.UsersSettings).FirstOrDefaultAsync(s =>
+                s.MainCharacter == lodestoneId);
+            if (settings == null) return false;
+            if (settings.UserId == Context.User.Id) {
+                if (settings.VerifiedCharacter) {
+                    await ReplyAsync($"You are already associated with {profile.Name} of {profile.Server}");
+                    return true;
+                }
+
+                string prefix = await GetPrefixAsync();
+                await ReplyAsync($"You are already pending verification as {profile.Name} of " +
+                                 $"{profile.Server}, run `{prefix}verify-character` to start the " +
+                                 $"verification process.");
+                return true;
+            }
+
+            if (!settings.VerifiedCharacter) return false;
+            await ReplyAsync($"Character {profile.Name} of {profile.Server} is" +
+                             "already associated with and verified by another Discord user!");
+            return true;
         }
 
         [Command("iam")]
@@ -117,12 +142,7 @@ namespace Botflox.Bot.Modules
             CharacterProfile profile;
             using (Context.Channel.EnterTypingState()) {
                 profile = await _apiClient.CharacterProfileAsync(lodestoneId);
-                if (await _database.UsersSettings.AnyAsync(s => s.MainCharacter == lodestoneId &&
-                                                                s.VerifiedCharacter)) {
-                    await ReplyAsync($"Character {profile.Name} of {profile.Server} is" +
-                                     "already associated with and verified by another Discord user!");
-                    return;
-                }
+                if (await CheckConflict(lodestoneId, profile)) return;
 
                 confirm = await ReplyAsync($"Found {profile.Name} of {profile.Server}, " +
                                            "react ✅ if so or ❎ if not.");
@@ -151,12 +171,7 @@ namespace Botflox.Bot.Modules
                 }
 
                 lodestoneId = profile.LodestoneId;
-                if (await _database.UsersSettings.AnyAsync(s => s.MainCharacter == lodestoneId &&
-                                                                s.VerifiedCharacter)) {
-                    await ReplyAsync($"Character {profile.Name} of {profile.Server} is" +
-                                     "already associated with and verified by another Discord user!");
-                    return;
-                }
+                if (await CheckConflict(lodestoneId, profile)) return;
 
                 confirm = await ReplyAsync($"Found {profile.Name} of {profile.Server}, " +
                                            "react ✅ if so or ❎ if not.");
@@ -178,17 +193,12 @@ namespace Botflox.Bot.Modules
                 }
                 catch (InvalidOperationException) {
                     await ReplyAsync("Search terms returned either multiple or no characters, try again. If " +
-                                     "necessary, try searching on a specific server with `iams \"First Last\" Cactuar`");
+                                     "necessary, try searching on a specific server with `iams \"First Last\" Server`");
                     return;
                 }
 
                 lodestoneId = profile.LodestoneId;
-                if (await _database.UsersSettings.AnyAsync(s => s.MainCharacter == lodestoneId &&
-                                                                s.VerifiedCharacter)) {
-                    await ReplyAsync($"Character {profile.Name} of {profile.Server} is" +
-                                     "already associated with and verified by another Discord user!");
-                    return;
-                }
+                if (await CheckConflict(lodestoneId, profile)) return;
 
                 confirm = await ReplyAsync($"Found {profile.Name} of {profile.Server}, " +
                                            "react ✅ if so or ❎ if not.");

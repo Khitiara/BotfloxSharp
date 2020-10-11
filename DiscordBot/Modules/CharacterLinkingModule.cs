@@ -91,13 +91,11 @@ namespace Botflox.Bot.Modules
                                 $" add `botflox:{Context.User.Id}` to your Lodestone profile and then run the" +
                                 $" `{prefix}verify-character` command.");
 
-                            await confirm.DeleteAsync();
                             await ReplyAsync(message.ToString());
                             return;
                         }
                         case "\u274E":
                             reacted = true;
-                            await confirm.DeleteAsync();
                             await ReplyAsync("Try again with a corrected Lodestone ID.");
                             return;
                     }
@@ -106,8 +104,8 @@ namespace Botflox.Bot.Modules
             finally {
                 _reactionAwaiter.Dispose();
 
+                await confirm.DeleteAsync();
                 if (!reacted) {
-                    await confirm.DeleteAsync();
                     await ReplyAsync("Confirmation timed out, please try again.");
                 }
             }

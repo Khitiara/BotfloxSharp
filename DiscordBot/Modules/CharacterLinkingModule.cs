@@ -126,7 +126,7 @@ namespace Botflox.Bot.Modules
                 string prefix = await GetPrefixAsync();
                 await ReplyAsync($"You are already pending verification as {profile.Name} of " +
                                  $"{profile.Server}, run `{prefix}verify-character` to start the " +
-                                 $"verification process.");
+                                 "verification process.");
                 return true;
             }
 
@@ -192,8 +192,9 @@ namespace Botflox.Bot.Modules
                     profile = await _apiClient.FindSingleCharacterAsync(name, server);
                 }
                 catch (InvalidOperationException) {
+                    string prefix = await GetPrefixAsync();
                     await ReplyAsync("Search terms returned either multiple or no characters, try again. If " +
-                                     "necessary, try searching on a specific server with `iams \"First Last\" Server`");
+                                     $"necessary, try searching on a specific server with `{prefix}iams \"First Last\" Server`");
                     return;
                 }
 

@@ -26,6 +26,12 @@ namespace XivApi.Character
             Female  = 2
         }
 
+        public struct FcCrest {
+            public string? Background;
+            public string? Shape;
+            public string? Icon;
+        }
+
         public ulong LodestoneId { get; }
         public string Name { get; }
 
@@ -51,6 +57,7 @@ namespace XivApi.Character
 
         public string? FreeCompanyName { get; }
         public string? FreeCompanyTag { get; }
+        public FcCrest? FreeCompanyCrest { get; }
 
         public CharacterProfile(CharacterResponse response) {
             Raw.Character character = response.Character;
@@ -81,6 +88,11 @@ namespace XivApi.Character
             FreeCompany? freeCompany = response.FreeCompany;
             FreeCompanyName = freeCompany?.Name;
             FreeCompanyTag = freeCompany?.Tag;
+            FreeCompanyCrest = new FcCrest {
+                Background = freeCompany?.Crest[0],
+                Shape = freeCompany?.Crest[1],
+                Icon = freeCompany?.Crest[2]
+            };
         }
     }
 }

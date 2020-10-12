@@ -5,5 +5,6 @@ namespace XivApi.Character.Raw
     {
         public string Name { get; set; }
         public string Tag { get; set; }
+        public string[] Crest { get; set; }
     }
 }

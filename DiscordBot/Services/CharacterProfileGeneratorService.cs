@@ -73,6 +73,38 @@ namespace Botflox.Bot.Services
             return isMaxed == null ? _bGray : (bool) isMaxed ? _bOrange : _bWhite;
         }
 
+        private async ValueTask<Image> GetFreeCompanyCrestImage(HttpClient? client, 
+            CharacterProfile.FcCrest? crest) 
+        {
+            Task<Stream> a = client.GetStreamAsync(crest?.Background);
+            Task<Stream> b = client.GetStreamAsync(crest?.Shape);
+            Task<Stream> c = client.GetStreamAsync(crest?.Icon);
+
+            Image bgImage, shImage, icImage;
+
+            await using (Stream bgStream = await a)
+            await using (Stream shStream = await b)
+            await using (Stream icStream = await c)
+            {
+                bgImage = await LoadImageAsync(bgStream);
+                shImage = await LoadImageAsync(shStream);
+                icImage = await LoadImageAsync(icStream);
+            }
+
+            Bitmap crestImage = new Bitmap(bgImage.Width, bgImage.Height, PixelFormat.Format32bppArgb);
+            if (bgImage == null || shImage == null || icImage == null) 
+                return crestImage;
+
+            using (Graphics graphics = Graphics.FromImage(crestImage)) {
+                graphics.DrawImageUnscaled(bgImage, Point.Empty);
+                graphics.DrawImageUnscaled(shImage, Point.Empty);
+                graphics.DrawImageUnscaled(icImage, Point.Empty);
+            }
+
+            crestImage.MakeTransparent(Color.FromArgb(64, 64, 64));
+            return crestImage;
+        }
+
         public async ValueTask<Image> RenderCharacterProfileAsync(CharacterProfile profile) {
             FontFamily lato = await _fontUtils.LoadFontResource("Botflox.Bot.Resources.Lato-Regular.ttf");
 

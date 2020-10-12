@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
 using XivApi.Character;
 using Botflox.Bot.Utils;
 
@@ -24,6 +25,7 @@ namespace Botflox.Bot.Services
         private const int EurekaY        = CornerY;
 
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IMemoryCache       _cache;
         private readonly FontUtils          _fontUtils;
 
         private readonly Dictionary<int, Tuple<int, int>> _coords = new Dictionary<int, Tuple<int, int>> {
@@ -64,8 +66,11 @@ namespace Botflox.Bot.Services
         private readonly SolidBrush _bOrange = new SolidBrush(Color.FromArgb(239, 134, 48));
         private readonly SolidBrush _bGray   = new SolidBrush(Color.LightGray);
 
-        public CharacterProfileGeneratorService(IHttpClientFactory httpClientFactory, FontUtils fontUtils) {
+        public CharacterProfileGeneratorService(IHttpClientFactory httpClientFactory, 
+            IMemoryCache cache, FontUtils fontUtils) 
+        {
             _httpClientFactory = httpClientFactory;
+            _cache = cache;
             _fontUtils = fontUtils;
         }
 
@@ -73,7 +78,7 @@ namespace Botflox.Bot.Services
             return isMaxed == null ? _bGray : (bool) isMaxed ? _bOrange : _bWhite;
         }
 
-        private async ValueTask<Image> GetFreeCompanyCrestImage(HttpClient? client, 
+        private async Task<Image> GetFreeCompanyCrestImage(HttpClient? client, 
             CharacterProfile.FcCrest? crest) 
         {
             Task<Stream> a = client.GetStreamAsync(crest?.Background);
@@ -116,6 +121,16 @@ namespace Botflox.Bot.Services
             Image portrait, bg = await Task.Run(() => Resources.ProfileBg);
             Image canvas = new Bitmap(1310, 873, PixelFormat.Format32bppArgb);
 
+            // 128x128 here are placeholder values
+            Image crest = new Bitmap(128, 128, PixelFormat.Format32bppArgb);
+            if (profile.FreeCompanyId != null && profile.FreeCompanyCrest != null) {
+                string? crestKey = $"crest:{profile.FreeCompanyId}";
+                crest = await _cache.GetOrCreateAsync<Image>(crestKey, entry => {
+                    entry.SetAbsoluteExpiration(TimeSpan.FromDays(7));
+                    return GetFreeCompanyCrestImage(client, profile.FreeCompanyCrest);
+                });
+            }
+
             await using (Stream p = await client.GetStreamAsync(profile.Portrait)) {
                 portrait = await LoadImageAsync(p);
             }
@@ -155,6 +170,8 @@ namespace Botflox.Bot.Services
                 graphics.DrawStringCentered(eurekaLevel?.ToString() ?? "-", number,
                     GetLevelColor(profile.ContentLevels.EurekaCapped),
                     EurekaX, EurekaY);
+
+                graphics.DrawImage(crest, Point.Empty);
             }
 
             return canvas;

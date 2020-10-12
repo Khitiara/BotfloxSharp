@@ -55,6 +55,7 @@ namespace XivApi.Character
         public string? GrandCompanyRank { get; }
         public GenderId Gender { get; }
 
+        public ulong? FreeCompanyId { get; }
         public string? FreeCompanyName { get; }
         public string? FreeCompanyTag { get; }
         public FcCrest? FreeCompanyCrest { get; }
@@ -86,6 +87,7 @@ namespace XivApi.Character
             Gender = (GenderId) character.Gender;
 
             FreeCompany? freeCompany = response.FreeCompany;
+            FreeCompanyId = ulong.Parse(freeCompany?.ID);
             FreeCompanyName = freeCompany?.Name;
             FreeCompanyTag = freeCompany?.Tag;
             FreeCompanyCrest = new FcCrest {

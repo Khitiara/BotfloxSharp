@@ -5,6 +5,8 @@ namespace XivApi.Status
     public enum Status
     {
         Online,
+        Maintenance,
+        Offline
     }
 
     public enum Congestion
@@ -29,10 +31,10 @@ namespace XivApi.Status
         public Status Status { get; set; }
 
         [JsonPropertyName("congestion")]
-        public Congestion Congestion { get; set; }
+        public Congestion? Congestion { get; set; }
 
         [JsonPropertyName("creation")]
-        public CreationAvailability Creation { get; set; }
+        public CreationAvailability? Creation { get; set; }
 
         [JsonPropertyName("last_online")]
         public string LastOnline { get; set; } = null!;

@@ -122,6 +122,7 @@ namespace Botflox.Bot.Services
                 title = new Font(lato, 30, FontStyle.Regular, GraphicsUnit.Pixel),
                 medium = new Font(lato, 24, FontStyle.Regular, GraphicsUnit.Pixel),
                 small = new Font(lato, 20, FontStyle.Regular, GraphicsUnit.Pixel),
+                nameday = new Font(lato, 19, FontStyle.Regular, GraphicsUnit.Pixel),
                 number = new Font(lato, 28, FontStyle.Regular, GraphicsUnit.Pixel);
 
             StringFormat leftAlign = new StringFormat();
@@ -158,8 +159,8 @@ namespace Botflox.Bot.Services
                 graphics.DrawImage(bg, new Rectangle(640, 0, 762, 873));
                 graphics.DrawImage(portrait, new Rectangle(0, 0, 640, 873));
 
-                graphics.DrawString(profile.Name, name, _bWhite, 1008, profile.TitleTop ? 117 : 85, centerAlign);
-                graphics.DrawString($"<{profile.Title}>", title, _bWhite, 1008, profile.TitleTop ? 67 : 127, centerAlign);
+                graphics.DrawString(profile.Name, name, _bWhite, 1008, profile.TitleTop ? 117 : 87, centerAlign);
+                graphics.DrawString($"<{profile.Title}>", title, _bWhite, 1008, profile.TitleTop ? 69 : 123, centerAlign);
 
                 graphics.DrawString(profile.GrandCompany?.Name ?? "-", medium, _bWhite, 663, 287, leftAlign);
                 graphics.DrawString(profile.GrandCompanyRank ?? "-", small, _bWhite, 718, 317, leftAlign);
@@ -168,7 +169,7 @@ namespace Botflox.Bot.Services
                 graphics.DrawString(profile.GuardianDeity, small, _bWhite, 718, 417, leftAlign);
 
                 graphics.DrawString($"{profile.Server}, {profile.DataCenter}", small, _bWhite, 1071, 371, leftAlign);
-                graphics.DrawString(profile.NameDay, small, _bWhite, 1071, 417, leftAlign);
+                graphics.DrawString(profile.NameDay, nameday, _bWhite, 1071, 417, leftAlign);
 
                 graphics.DrawString(profile.FreeCompanyName ?? "-", medium, _bWhite, 1090, 287, leftAlign);
                 graphics.DrawString($"<{profile.FreeCompanyTag}>" ?? "-", small, _bWhite, 1087, 317, leftAlign);

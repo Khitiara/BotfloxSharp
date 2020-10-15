@@ -13,7 +13,6 @@ namespace Botflox.Bot.Utils
     public sealed class FontUtils : IDisposable
     {
         private readonly PrivateFontCollection _fontCollection = new PrivateFontCollection();
-        private          int                   _currentFamily;
         private readonly List<IntPtr>          _fontUnloaders = new List<IntPtr>();
         private          bool                  _disposed;
 
@@ -32,7 +31,6 @@ namespace Botflox.Bot.Utils
 
             _fontCollection.Dispose();
             _fontUnloaders.Clear();
-            _currentFamily = 0;
 
             _disposed = true;
         }
@@ -48,7 +46,6 @@ namespace Botflox.Bot.Utils
             TaskCompletionSource<FontFamily> taskSource = tcs;
             IntPtr handle;
             int length;
-            int oldSize = _fontCollection.Families.Length;
 
             await using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath)) {
                 if (stream == null) {

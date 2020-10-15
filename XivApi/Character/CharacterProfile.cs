@@ -69,10 +69,8 @@ namespace XivApi.Character
             Portrait = character.Portrait;
 
             ClassJobLevels = new CharacterClassJobs(character.ClassJobs);
-            
-            /*ContentLevels = new ContentLevelInfo(character.ClassJobsElemental.Level,
-                (character.ClassJobsElemental.ExpLevelMax == "") || 
-                (int.Parse(character.ClassJobsElemental.ExpLevelMax) > 0 && character.ClassJobsElemental.Level > 0));*/
+            ContentLevels = new ContentLevelInfo(character.ClassJobsElemental.Level,
+                character.ClassJobsElemental.ExpLevelMax == 0 && character.ClassJobsElemental.Level > 0);
 
             DataCenter = character.DC;
             Server = character.Server;
@@ -89,7 +87,7 @@ namespace XivApi.Character
             Gender = (GenderId) character.Gender;
 
             FreeCompany? freeCompany = response.FreeCompany;
-            FreeCompanyId = (freeCompany?.ID != null) ? ulong.Parse(freeCompany?.ID) : null;
+            FreeCompanyId = (freeCompany?.ID != null) ? ulong.Parse(freeCompany?.ID ?? "0") : null;
             FreeCompanyName = freeCompany?.Name;
             FreeCompanyTag = freeCompany?.Tag;
             FreeCompanyCrest = (freeCompany?.ID != null) ? new FcCrest{

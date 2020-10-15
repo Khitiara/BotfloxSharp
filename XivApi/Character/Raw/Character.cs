@@ -9,7 +9,7 @@ namespace XivApi.Character.Raw
         public Uri Avatar { get; set; }
         public string Bio { get; set; }
         public List<ClassJobInfo> ClassJobs { get; set; }
-        //public ClassJobsElemental ClassJobsElemental { get; set; }
+        public ClassJobsElemental ClassJobsElemental { get; set; }
         public string DC { get; set; }
         public ulong ID { get; set; }
         public string Name { get; set; }

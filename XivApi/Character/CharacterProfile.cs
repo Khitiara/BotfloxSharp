@@ -7,16 +7,21 @@ namespace XivApi.Character
     {
         public struct ContentLevelInfo
         {
-            public ContentLevelInfo(int? elementalLevel, bool eurekaCapped) {
-                EurekaCapped = eurekaCapped;
+            public ContentLevelInfo(int? elementalLevel, bool eurekaCapped, int? bozjaLevel) {
+                int bozjaMaxLevel = 15;
+
                 ElementalLevel = elementalLevel > 0 ? elementalLevel : null;
-                ResistanceRank = null;
+                EurekaCapped = eurekaCapped;
+                
+                ResistanceRank = bozjaLevel > 0 ? bozjaLevel : null;
+                ResistanceCapped = (bozjaLevel == bozjaMaxLevel);
             }
 
             public int? ElementalLevel { get; }
-
             public bool EurekaCapped { get; }
+
             public int? ResistanceRank { get; }
+            public bool ResistanceCapped { get; }
         }
 
         public enum GenderId
@@ -69,8 +74,10 @@ namespace XivApi.Character
             Portrait = character.Portrait;
 
             ClassJobLevels = new CharacterClassJobs(character.ClassJobs);
-            ContentLevels = new ContentLevelInfo(character.ClassJobsElemental.Level,
-                character.ClassJobsElemental.ExpLevelMax == 0 && character.ClassJobsElemental.Level > 0);
+            ContentLevels = new ContentLevelInfo(
+                character.ClassJobsElemental.Level,
+                character.ClassJobsElemental.ExpLevelMax == 0 && character.ClassJobsElemental.Level > 0,
+                character.ClassJobsBozjan.Level);
 
             DataCenter = character.DC;
             Server = character.Server;

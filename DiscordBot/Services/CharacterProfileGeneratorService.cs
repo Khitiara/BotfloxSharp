@@ -207,6 +207,11 @@ namespace Botflox.Bot.Services
                 graphics.DrawString(eurekaLevel?.ToString() ?? "-", number,
                     GetLevelColor(profile.ContentLevels.EurekaCapped),
                     EurekaX + TextOffsetX, EurekaY + TextOffsetY, centerAlign);
+
+                int? bozjaLevel = profile.ContentLevels.ResistanceRank;
+                graphics.DrawString(bozjaLevel?.ToString() ?? "-", number,
+                    GetLevelColor(profile.ContentLevels.ResistanceCapped),
+                    BozjaX + TextOffsetX, BozjaY + TextOffsetY, centerAlign);
             }
 
             return canvas;

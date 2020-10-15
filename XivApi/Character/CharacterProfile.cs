@@ -91,14 +91,14 @@ namespace XivApi.Character
             Gender = (GenderId) character.Gender;
 
             FreeCompany? freeCompany = response.FreeCompany;
-            FreeCompanyId = ulong.Parse(freeCompany?.ID);
+            FreeCompanyId = (freeCompany?.ID != null) ? ulong.Parse(freeCompany?.ID) : null;
             FreeCompanyName = freeCompany?.Name;
             FreeCompanyTag = freeCompany?.Tag;
-            FreeCompanyCrest = new FcCrest {
+            FreeCompanyCrest = (freeCompany?.ID != null) ? new FcCrest{
                 Background = freeCompany?.Crest[0],
-                Shape = freeCompany?.Crest[1],
+                Shape = freeCompany?.Crest[1] ,
                 Icon = freeCompany?.Crest[2]
-            };
+            } : null;
         }
     }
 }

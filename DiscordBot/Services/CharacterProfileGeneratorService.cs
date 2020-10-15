@@ -120,7 +120,7 @@ namespace Botflox.Bot.Services
 
             Font name = new Font(lato, 48, FontStyle.Bold, GraphicsUnit.Pixel),
                 title = new Font(lato, 30, FontStyle.Regular, GraphicsUnit.Pixel),
-                medium = new Font(lato, 24, FontStyle.Regular, GraphicsUnit.Pixel),
+                medium = new Font(lato, 24, FontStyle.Bold, GraphicsUnit.Pixel),
                 small = new Font(lato, 20, FontStyle.Regular, GraphicsUnit.Pixel),
                 nameday = new Font(lato, 19, FontStyle.Regular, GraphicsUnit.Pixel),
                 number = new Font(lato, 28, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -134,8 +134,11 @@ namespace Botflox.Bot.Services
             centerAlign.Alignment = StringAlignment.Center;
 
             HttpClient? client = _httpClientFactory.CreateClient("CharacterProfileGeneration");
-            Image portrait, bg = await Task.Run(() => Resources.ProfileBg);
             Image canvas = new Bitmap(1400, 873, PixelFormat.Format32bppArgb);
+            Image portrait;
+            
+            Image bg = await Task.Run(() => Resources.ProfileBg);
+            Image gcFlags = await Task.Run(() => Resources.GcFlags);
 
             // 128x128 here are placeholder values
             Image? crest = null;
@@ -162,7 +165,11 @@ namespace Botflox.Bot.Services
                 graphics.DrawString(profile.Name, name, _bWhite, 1008, profile.TitleTop ? 117 : 87, centerAlign);
                 graphics.DrawString($"<{profile.Title}>", title, _bWhite, 1008, profile.TitleTop ? 69 : 123, centerAlign);
 
-                graphics.DrawString(profile.GrandCompany?.Name ?? "-", medium, _bWhite, 663, 287, leftAlign);
+                if (profile.GrandCompany != null)
+                    graphics.DrawImage(gcFlags, new Rectangle(653, 170, 128, 92), 
+                        new Rectangle(128 * (profile.GrandCompany.ID - 1), 0, 128, 92), GraphicsUnit.Pixel);
+
+                graphics.DrawString($"The {profile.GrandCompany?.Name}" ?? "-", medium, _bWhite, 663, 287, leftAlign);
                 graphics.DrawString(profile.GrandCompanyRank ?? "-", small, _bWhite, 718, 317, leftAlign);
 
                 graphics.DrawString($"{profile.Race}, {profile.Tribe}", small, _bWhite, 718, 370, leftAlign);

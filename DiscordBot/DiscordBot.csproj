@@ -38,6 +38,7 @@
 
     <ItemGroup>
       <EmbeddedResource Include=".\Resources\Lato-Regular.ttf" />
+      <EmbeddedResource Include=".\Resources\Lato-Bold.ttf" />
     </ItemGroup>
 
     <ItemGroup>

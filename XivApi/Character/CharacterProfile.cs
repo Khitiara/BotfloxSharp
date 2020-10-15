@@ -52,6 +52,7 @@ namespace XivApi.Character
         public string Tribe { get; }
         public string Race { get; }
         public string GuardianDeity { get; }
+        public Company? GrandCompany { get; }
         public string? GrandCompanyRank { get; }
         public GenderId Gender { get; }
 
@@ -83,6 +84,7 @@ namespace XivApi.Character
             Tribe = character.Tribe.Name;
             Race = character.Race.Name;
             GuardianDeity = character.GuardianDeity.Name;
+            GrandCompany = character.GrandCompany.Company;
             GrandCompanyRank = character.GrandCompany.Rank?.Name;
             Gender = (GenderId) character.Gender;
 

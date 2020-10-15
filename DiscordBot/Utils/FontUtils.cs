@@ -48,6 +48,7 @@ namespace Botflox.Bot.Utils
             TaskCompletionSource<FontFamily> taskSource = tcs;
             IntPtr handle;
             int length;
+            int oldSize = _fontCollection.Families.Length;
 
             await using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath)) {
                 if (stream == null) {
@@ -71,7 +72,7 @@ namespace Botflox.Bot.Utils
 
             await Task.Run(() => _fontCollection.AddMemoryFont(handle, length));
             _fontUnloaders.Add(handle);
-            FontFamily family = _fontCollection.Families[_currentFamily++];
+            FontFamily family = _fontCollection.Families[_fontCollection.Families.Length - 1];
             taskSource.SetResult(family);
             return family;
         }
